@@ -5,7 +5,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className='bg-gray-800 w-full md:px-20 px-5 py-10'>
+    <div className='bg-gray-800 w-full md:px-20 px-5 md:py-5 py-10'>
 
       <div className="md:grid grid-cols-3 gap-10">
         <div className='text-white p-3'>
@@ -45,7 +45,7 @@ const Footer = () => {
 
       </div>
 
-      <div className='text-center text-yellow-500 my-10'>
+      <div className='text-center text-yellow-500 md:my-5 my-10'>
         <p>© 2025  GLOW. All Rights Reserved  Designed <br /> and  Developed with  ❤️  by  Adithya  Bijimon  </p>
       </div>
 
