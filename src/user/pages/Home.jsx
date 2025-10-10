@@ -37,7 +37,7 @@ const Home = () => {
 
                 <div className='absolute w-full bg-black/60 md:h-175 h-155'></div>
 
-                <div className='absolute z-10 text-white inset-0'>
+                <div className='absolute z-10 text-white inset-0   '>
 
                     {/* User home page header */}
 
@@ -77,8 +77,8 @@ const Home = () => {
             <div className='md:grid grid-cols-2 gap-10 md:mx-40 mx-10  my-20'>
                 {/* image,border and box */}
                 <div className='md:px-30'>
-                     <div className=' bg-[url(https://i2-prod.mirror.co.uk/article32501533.ece/ALTERNATES/s1200c/1_GettyImages-1469265810.jpg)] w-full h-90 bg-cover bg-center border-20 border-yellow-500 '>
-                     </div>
+                    <div className=' bg-[url(https://i2-prod.mirror.co.uk/article32501533.ece/ALTERNATES/s1200c/1_GettyImages-1469265810.jpg)] w-full h-90 bg-cover bg-center border-20 border-yellow-500 '>
+                    </div>
                     {/* <div style={{marginBottom:'500px'}} className=" border-4 border-yellow-500 h-90"></div> */}
 
                 </div>
@@ -98,10 +98,10 @@ const Home = () => {
             {/* Services section */}
 
             <div className='md:mx-40 mx-10 my-20'>
-                 <h4 className='font-semibold text-md text-yellow-500 text-center mt-3 md:mt-0'>OUR SERVICES</h4>
-                 <h1 className='font-bold md:text-5xl text-3xl text-center'>From head to toe, we've <br className='hidden md:inline' /> got you covered</h1>
+                <h4 className='font-semibold text-md text-yellow-500 text-center mt-3 md:mt-0'>OUR SERVICES</h4>
+                <h1 className='font-bold md:text-5xl text-3xl text-center'>From head to toe, we've <br className='hidden md:inline' /> got you covered</h1>
 
-                 <div className="md:grid grid-cols-3 gap-5 my-10">
+                <div className="md:grid grid-cols-3 gap-5 my-10">
                     <div className="shadow w-full p-3">
                         <img className='w-full h-80 object-cover' src="https://www.bodycraft.co.in/hubfs/Imported_Blog_Media/beautiful-keratin-treated-hair-1-1.jpg" alt="" />
                         <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold'>Smoothening</h3>
@@ -114,10 +114,10 @@ const Home = () => {
                         <img className='w-full h-80 object-cover' src="https://m.media-amazon.com/images/I/61qd8hwOc9L._UF1000,1000_QL80_.jpg" alt="" />
                         <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold' >Manicure</h3>
                     </div>
-                 </div>
+                </div>
             </div>
 
-            <Footer/>
+            <Footer />
 
 
 
