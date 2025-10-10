@@ -49,7 +49,7 @@ const Home = () => {
                             <FontAwesomeIcon onClick={() => setMenu(!menu)} icon={faBars} className='text-3xl md:!hidden' />
                         </div>
                         <ul className={menu ? 'md:flex items-center md:mt-0 mt-3 md:text-base text-xl text-center' : 'md:flex hidden items-center  cursor-pointer'}>
-                            <Link to={'/'}><li className='text-gray-300 hover:text-white'> Home</li></Link>
+                            <Link to={'/'}><li className='text-gray-300 hover:text-white'>Home</li></Link>
                             <Link to={'/about'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> About</li></Link>
                             <Link to={'/services'}><li className='text-gray-300 hover:text-white'> Services</li></Link>
                             <Link to={'/contact'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> Contact</li></Link>
