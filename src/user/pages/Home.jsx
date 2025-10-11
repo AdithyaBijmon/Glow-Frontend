@@ -53,7 +53,7 @@ const Home = () => {
                             <Link to={'/about'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> About</li></Link>
                             <Link to={'/services'}><li className='text-gray-300 hover:text-white'> Services</li></Link>
                             <Link to={'/contact'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> Contact</li></Link>
-                            <li><button className='px-5 py-2 bg-yellow-500 text-black font-bold'>Login</button></li>
+                            <li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li>
                         </ul>
                     </div>
 
