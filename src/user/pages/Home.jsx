@@ -64,13 +64,9 @@ const Home = () => {
                     <h1 className='md:text-8xl text-5xl font-bold md:mx-45 mx-15'>Modern style.</h1>
                     <div className='md:block flex justify-center mt-10 '><button className='md:px-30 px-10 py-4 bg-yellow-500 text-black font-bold md:mx-46 mx-10'>Book an Appointment</button></div>
 
-
-
-
                 </div>
 
             </div>
-
 
             {/* About section */}
 
@@ -115,7 +111,12 @@ const Home = () => {
                         <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold' >Manicure</h3>
                     </div>
                 </div>
+
+                <div className='flex justify-center'><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer'>Explore more</button></div>
             </div>
+
+
+            
 
             <Footer />
 
