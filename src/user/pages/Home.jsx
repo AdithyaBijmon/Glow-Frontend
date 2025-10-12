@@ -1,7 +1,7 @@
 import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
 import { Link } from 'react-router-dom'
 
@@ -115,8 +115,30 @@ const Home = () => {
                 <div className='flex justify-center'><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer'>Explore more</button></div>
             </div>
 
+            {/* Discount */}
+            <div className='bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-700 w-full h-50 flex justify-center items-center my-20 flex-col p-5'>
 
-            
+                <h2 className='text-3xl font-bold'>Get 20% Off</h2>
+                <p className='text-xl text-white my-3'>Join our community for members-only offers and updates</p>
+
+                <div className='flex justify-center'><button className='bg-white px-4 py-2 text-black font-bold  mt-5 cursor-pointer'>Contact Us</button></div>
+
+            </div>
+
+            {/* Testimonial section */}
+
+            <div className='md:mx-40 mx-10 my-20'>
+                <h4 className='font-semibold text-md text-yellow-500 text-center mt-3 md:mt-0'>TESTIMONIAL</h4>
+                <h1 className='font-bold md:text-5xl text-3xl text-center'>Real stories from people who<br className='hidden md:inline' /> love their new look</h1>
+
+                <div className='w-full shadow-xl mx-10 flex justify-center items-center flex-col my-10 p-5 relative '>
+                    <img width={'150px'} height={'150px'} className='rounded' src="https://static.vecteezy.com/system/resources/previews/000/439/863/non_2x/vector-users-icon.jpg" alt="" />
+                    <h3 className='text-yellow-500 text-xl font-semibold'>James Steve</h3>
+                    <p className='font-semibold text-lg'>“Friendly  services  and i  loved it.”</p>
+
+                    <div className='absolute bg-yellow-500 w-15 h-15 rounded-full flex justify-center items-center' style={{left:'-25px',top:'-20px'}} ><FontAwesomeIcon className='text-2xl' icon={faQuoteLeft}/></div>
+                </div>
+            </div>
 
             <Footer />
 
