@@ -8,6 +8,11 @@ import { Link } from 'react-router-dom'
 const Home = () => {
 
     const [menu, setMenu] = useState(false)
+    const [testimonialPag1, setTestimonialPag1] = useState(true)
+    const [testimonialPag2, setTestimonialPag2] = useState(false)
+    const [testimonialPag3, setTestimonialPag3] = useState(false)
+
+
 
     return (
         <>
@@ -131,12 +136,21 @@ const Home = () => {
                 <h4 className='font-semibold text-md text-yellow-500 text-center mt-3 md:mt-0'>TESTIMONIAL</h4>
                 <h1 className='font-bold md:text-5xl text-3xl text-center'>Real stories from people who<br className='hidden md:inline' /> love their new look</h1>
 
-                <div className='w-full shadow-xl mx-10 flex justify-center items-center flex-col my-10 p-5 relative '>
+                {/* Testimonial details */}
+                <div className='w-full shadow-xl  flex justify-center items-center flex-col my-10 p-5 relative '>
                     <img width={'150px'} height={'150px'} className='rounded' src="https://static.vecteezy.com/system/resources/previews/000/439/863/non_2x/vector-users-icon.jpg" alt="" />
-                    <h3 className='text-yellow-500 text-xl font-semibold'>James Steve</h3>
+                    <h3 className='text-yellow-500 text-xl font-semibold'>{testimonialPag1 ? 'James Steve' : testimonialPag2 ? 'Ayona Martin' : 'Julia Samuvel'}</h3>
                     <p className='font-semibold text-lg'>“Friendly  services  and i  loved it.”</p>
 
-                    <div className='absolute bg-yellow-500 w-15 h-15 rounded-full flex justify-center items-center' style={{left:'-25px',top:'-20px'}} ><FontAwesomeIcon className='text-2xl' icon={faQuoteLeft}/></div>
+                    <div className='absolute bg-yellow-500 md:w-15 md:h-15 w-10 h-10 rounded-full flex justify-center items-center' style={{ left: '-25px', top: '-20px' }} ><FontAwesomeIcon className='text-2xl ' icon={faQuoteLeft} /></div>
+                </div>
+
+                {/* Testimonial pagination */}
+
+                <div className='flex justify-center items-center '>
+                    <button onClick={() => { setTestimonialPag1(true); setTestimonialPag2(false); setTestimonialPag3(false) }} className={testimonialPag1 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5' : 'w-3 h-3 bg-gray-400 rounded-full mx-5 '}></button>
+                    <button onClick={() => { setTestimonialPag1(false); setTestimonialPag2(true); setTestimonialPag3(false) }} className={testimonialPag2 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5' : 'w-3 h-3 bg-gray-400 rounded-full mx-5'}></button>
+                    <button onClick={() => { setTestimonialPag1(false); setTestimonialPag2(false); setTestimonialPag3(true) }} className={testimonialPag3 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5' : 'w-3 h-3 bg-gray-400 rounded-full mx-5'}></button>
                 </div>
             </div>
 
