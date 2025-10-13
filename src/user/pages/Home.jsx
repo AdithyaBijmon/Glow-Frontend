@@ -58,7 +58,7 @@ const Home = () => {
                             <Link to={'/about'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> About</li></Link>
                             <Link to={'/services'}><li className='text-gray-300 hover:text-white'> Services</li></Link>
                             <Link to={'/contact'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> Contact</li></Link>
-                            <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li></Link>
+                            <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold hover:bg-yellow-400 cursor-pointer'>Login</button></li></Link>
                         </ul>
                     </div>
 
@@ -67,7 +67,7 @@ const Home = () => {
                     <h3 className='text-yellow-500 md:text-2xl text-xl md:mt-50 mt-35 md:mx-30 mx-5'>WELCOME  TO  GLOW</h3>
                     <h2 className='md:text-6xl text-4xl font-bold md:mx-30 mx-5 md:mt-10 mt-5'>Timeless Beauty.</h2>
                     <h1 className='md:text-8xl text-5xl font-bold md:mx-45 mx-15'>Modern style.</h1>
-                    <div className='md:block flex justify-center mt-10 '><button className='md:px-30 px-10 py-4 bg-yellow-500 text-black font-bold md:mx-46 mx-10'>Book an Appointment</button></div>
+                    <div className='md:block flex justify-center mt-10 '><button className='md:px-30 px-10 py-4 bg-yellow-500 text-black font-bold md:mx-46 mx-10 hover:bg-yellow-400'>Book an Appointment</button></div>
 
                 </div>
 
@@ -117,7 +117,7 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div className='flex justify-center'><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer'>Explore more</button></div>
+                <div className='flex justify-center'><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer hover:bg-yellow-400'>Explore more</button></div>
             </div>
 
             {/* Discount */}

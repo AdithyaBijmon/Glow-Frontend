@@ -20,7 +20,7 @@ const Contact = () => {
 
         <textarea className='border border-gray-300 border-2 placeholder-gray-400 p-2 w-100 ' placeholder='Message...' rows={5} ></textarea>
 
-        <button className='bg-yellow-500 px-4 py-2  text-black font-bold w-100 mt-5'>Send Message</button>
+        <button className='bg-yellow-500 px-4 py-2  text-black font-bold w-100 mt-5 hover:bg-yellow-400'>Send Message</button>
       </div>
 
       {/* Contact informations */}

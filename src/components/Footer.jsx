@@ -30,7 +30,7 @@ const Footer = () => {
           <h1 className='font-bold text-xl  mb-5'>Connect Us</h1>
           <div className='flex md:justify-center'>
             <input type="text" className='bg-white py-1 w-50 placeholder-gray-400 px-2 ' placeholder='Enter your email' />
-            <button className='bg-yellow-500 px-2 py-1 text-black'><FontAwesomeIcon icon={faPaperPlane} /></button>
+            <button className='bg-yellow-500 px-2 py-1 text-black hover:bg-yellow-400'><FontAwesomeIcon icon={faPaperPlane} /></button>
           </div>
         </div>
       </div>

@@ -25,7 +25,7 @@ const Services = () => {
       {/* Search input and button */}
       <div className='md:px-50 px-15 my-20 '>
         <input type="text" className='border border-black placeholder-gray-400 p-2' placeholder='Search services here...' />
-        <button className='bg-yellow-500 px-3 py-2 ms-3 text-black'><FontAwesomeIcon icon={faSearch} /></button>
+        <button className='bg-yellow-500 px-3 py-2 ms-3 text-black hover:bg-yellow-400'><FontAwesomeIcon icon={faSearch} /></button>
       </div>
 
 
