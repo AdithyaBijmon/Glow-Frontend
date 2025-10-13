@@ -124,7 +124,7 @@ const Home = () => {
             <div className='bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-700 w-full h-50 flex justify-center items-center my-20 flex-col p-5'>
 
                 <h2 className='text-3xl font-bold'>Get 20% Off</h2>
-                <p className='text-xl text-white my-3'>Join our community for members-only offers and updates</p>
+                <p className='text-xl text-white my-3 text-center'>Join our community for members-only offers and updates</p>
 
                 <div className='flex justify-center'><button className='bg-white px-4 py-2 text-black font-bold  mt-5 cursor-pointer'>Contact Us</button></div>
 
@@ -138,7 +138,7 @@ const Home = () => {
 
                 {/* Testimonial details */}
                 <div className='w-full shadow-xl  flex justify-center items-center flex-col my-10 p-5 relative '>
-                    <img width={'150px'} height={'150px'} className='rounded' src="https://static.vecteezy.com/system/resources/previews/000/439/863/non_2x/vector-users-icon.jpg" alt="" />
+                    <img style={{width:'120px',height:'120px'}} className='rounded-full my-3 object-cover' src={testimonialPag1 ? "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=3017" : testimonialPag2 ? "https://img.freepik.com/free-photo/horizontal-portrait-smiling-happy-young-pleasant-looking-female-wears-denim-shirt-stylish-glasses-with-straight-blonde-hair-expresses-positiveness-poses_176420-13176.jpg?semt=ais_hybrid&w=740&q=80" : "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ="} alt="" />
                     <h3 className='text-yellow-500 text-xl font-semibold'>{testimonialPag1 ? 'James Steve' : testimonialPag2 ? 'Ayona Martin' : 'Julia Samuvel'}</h3>
                     <p className='font-semibold text-lg'>“Friendly  services  and i  loved it.”</p>
 
@@ -148,9 +148,9 @@ const Home = () => {
                 {/* Testimonial pagination */}
 
                 <div className='flex justify-center items-center '>
-                    <button onClick={() => { setTestimonialPag1(true); setTestimonialPag2(false); setTestimonialPag3(false) }} className={testimonialPag1 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5' : 'w-3 h-3 bg-gray-400 rounded-full mx-5 '}></button>
-                    <button onClick={() => { setTestimonialPag1(false); setTestimonialPag2(true); setTestimonialPag3(false) }} className={testimonialPag2 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5' : 'w-3 h-3 bg-gray-400 rounded-full mx-5'}></button>
-                    <button onClick={() => { setTestimonialPag1(false); setTestimonialPag2(false); setTestimonialPag3(true) }} className={testimonialPag3 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5' : 'w-3 h-3 bg-gray-400 rounded-full mx-5'}></button>
+                    <button onClick={() => { setTestimonialPag1(true); setTestimonialPag2(false); setTestimonialPag3(false) }} className={testimonialPag1 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5 cursor-pointer' : 'w-3 h-3 bg-gray-400 rounded-full mx-5 cursor-pointer'}></button>
+                    <button onClick={() => { setTestimonialPag1(false); setTestimonialPag2(true); setTestimonialPag3(false) }} className={testimonialPag2 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5 cursor-pointer' : 'w-3 h-3 bg-gray-400 rounded-full mx-5 cursor-pointer'}></button>
+                    <button onClick={() => { setTestimonialPag1(false); setTestimonialPag2(false); setTestimonialPag3(true) }} className={testimonialPag3 ? 'w-3 h-3 bg-yellow-500 rounded-full mx-5 cursor-pointer' : 'w-3 h-3 bg-gray-400 rounded-full mx-5 cursor-pointer'}></button>
                 </div>
             </div>
 

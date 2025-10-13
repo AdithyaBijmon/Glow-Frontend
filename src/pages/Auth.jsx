@@ -5,7 +5,7 @@ const Auth = ({ register }) => {
   return (
     <div className='bg-yellow-500 w-full h-screen flex justify-center items-center md:px-50'>
 
-      <div className='bg-white md:min-h-120 min-h-90 w-full md:mx-40 mx-5 md:grid grid-cols-2'>
+      <div className='bg-white md:min-h-120 min-h-90 w-full md:mx-40 mx-5 md:grid grid-cols-2 shadow-xl'>
 
         {/* left image */}
         <div className='md:flex hidden'>

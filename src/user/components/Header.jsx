@@ -20,7 +20,7 @@ const Header = ({navblack}) => {
         <Link to={'/about'}><li className='md:mx-10 md:my-0 my-2 text-gray-200 hover:text-white'>About</li></Link>
         <Link to={'/services'}><li className='text-gray-200 hover:text-white'>Services</li></Link>
         <Link to={'/contact'}><li className='md:mx-10 md:my-0 my-2 text-gray-200 hover:text-white'>Contact</li></Link>
-        <li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li>
+        <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li></Link>
       </ul>
 
     </div>
