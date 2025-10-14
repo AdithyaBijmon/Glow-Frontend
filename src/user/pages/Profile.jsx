@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Header from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
+import Footer from '../../components/Footer'
 
 const Profile = () => {
 
@@ -39,43 +40,72 @@ const Profile = () => {
 
             {
                 appoint &&
-               <>
-                    <div className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
+                <>
+                    <div className='md:flex justify-between my-10 shadow md:mx-40 mx-10 py-5 md:px-10 px-5 text-center md:text-left'>
                         <div className='flex flex-col'>
                             <h2 className='text-2xl font-semibold text-yellow-500'>Hair Spa</h2>
                             <h5>Date : <span className='font-semibold'>12-10-2025</span></h5>
                             <h5>Time : <span className='font-semibold'>10:00 AM</span></h5>
-                            <p className='my-3'>Status: <span className='text-green-700 font-semibold'>Approved</span></p>
+                            <p className='my-3'>Status: <span className='text-blue-600 font-semibold'>Pending</span></p>
                         </div>
-    
-                        <div className='flex flex-col items-center justify-center'>
-                            <button className='text-blue-500 cursor-pointer'>Change Date or Time</button>
-                            <button className='text-red-500 cursor-pointer mt-3'>Delete Appointment</button>
+
+                        <div className='flex md:flex-col items-center md:justify-center justify-between'>
+                            <button className='text-blue-500 cursor-pointer text-sm'>Change Date or Time</button>
+                            <button className='text-red-500 cursor-pointer md:mt-3 text-sm'>Delete Appointment</button>
                         </div>
                     </div>
-    
-                    <div className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
+
+                    <div className='md:flex justify-between my-10 shadow md:mx-40 mx-10 py-5 md:px-10 px-5 text-center md:text-left'>
                         <div className='flex flex-col'>
-                            <h2 className='text-2xl font-semibold text-yellow-500'>Hair Spa</h2>
+                            <h2 className='text-2xl font-semibold text-yellow-500'>Botox Treatment</h2>
                             <h5>Date : <span className='font-semibold'>22-10-2025</span></h5>
                             <h5>Time : <span className='font-semibold'>1:00 PM</span></h5>
                             <p className='my-3'>Status: <span className='text-green-700 font-semibold'>Approved</span></p>
                         </div>
-    
-                        <div className='flex flex-col items-center justify-center'>
-                            <button className='text-blue-500 cursor-pointer'>Change Date or Time</button>
-                            <button className='text-red-500 cursor-pointer mt-3'>Delete Appointment</button>
+
+                        <div className='flex md:flex-col items-center md:justify-center justify-between'>
+                            <button className='text-blue-500 cursor-pointer text-sm'>Change Date or Time</button>
+                            <button className='text-red-500 cursor-pointer md:mt-3 text-sm'>Delete Appointment</button>
                         </div>
                     </div>
-               </>
+                </>
             }
 
             {
                 history &&
-                <div className='flex justify-center my-10'>
-                    <h1>History here..</h1>
-                </div>
+                <>
+                    <button className='my-5 md:ms-50 ms-10 text-red-500 text-lg'>Clear History</button>
+                    <div className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
+                        <div className='flex flex-col'>
+                            <h2 className='text-2xl font-semibold text-yellow-500'>Hair Cut</h2>
+                            <h5>Date : <span className='font-semibold'>04-5-2025</span></h5>
+                            <h5>Time : <span className='font-semibold'>09:00 AM</span></h5>
+
+                        </div>
+
+                        <div className='flex flex-col items-center justify-center'>
+
+                            <button className='text-red-500 cursor-pointer mt-3'>Delete</button>
+                        </div>
+                    </div>
+
+                    <div className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
+                        <div className='flex flex-col'>
+                            <h2 className='text-2xl font-semibold text-yellow-500'>Pedicure</h2>
+                            <h5>Date : <span className='font-semibold'>1-09-2025</span></h5>
+                            <h5>Time : <span className='font-semibold'>03:00 PM</span></h5>
+
+                        </div>
+
+                        <div className='flex flex-col items-center justify-center'>
+
+                            <button className='text-red-500 cursor-pointer mt-3'>Delete</button>
+                        </div>
+                    </div>
+                </>
             }
+
+            <Footer/>
         </>
     )
 }
