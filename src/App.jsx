@@ -6,6 +6,7 @@ import Services from './user/pages/Services'
 import Contact from './user/pages/Contact'
 import Auth from './pages/Auth'
 import Pnf from './pages/Pnf'
+import Profile from './user/pages/Profile'
 
 
 function App() {
@@ -19,7 +20,9 @@ function App() {
         <Route path='/contact' element={<Contact/>}/>
         <Route path='/login' element={<Auth/>}/>
         <Route path='/register' element={<Auth register/>}/>
+        <Route path='/profile' element={<Profile/>}/>
         <Route path='/*' element={<Pnf/>}/>
+
 
       </Routes>
     </>
