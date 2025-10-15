@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const Auth = ({ register }) => {
+   
+  const [userDetails,setUserDetails] = useState({username:"",email:"",password:""})
+  console.log(userDetails)
+
   return (
+
     <div className='bg-yellow-500 w-full h-screen flex justify-center items-center md:px-50'>
 
       <div className='bg-white md:min-h-120 min-h-90 w-full md:mx-40 mx-5 md:grid grid-cols-2 shadow-xl'>
@@ -20,14 +25,14 @@ const Auth = ({ register }) => {
 
           {
             register ?
-              <input type="text" className='border border-gray-300 placeholder-gray-400 w-full p-2' placeholder='Name' />
+              <input onChange={(e)=>setUserDetails({...userDetails,username:e.target.value})} type="text" className='border border-gray-300 placeholder-gray-400 w-full p-2' placeholder='Name' />
               :
               ''
           }
 
-          <input type="email" className='border border-gray-300 placeholder-gray-400 p-2 my-5 w-full' placeholder='Email' />
+          <input onChange={(e)=>setUserDetails({...userDetails,email:e.target.value})} type="email" className='border border-gray-300 placeholder-gray-400 p-2 my-5 w-full' placeholder='Email' />
 
-          <input type="password" className='border border-gray-300 placeholder-gray-400 p-2 w-full' placeholder='Password' />
+          <input onChange={(e)=>setUserDetails({...userDetails,password:e.target.value})} type="password" className='border border-gray-300 placeholder-gray-400 p-2 w-full' placeholder='Password' />
 
           <button className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>{register ? 'Register' : 'Login'}</button>
 
