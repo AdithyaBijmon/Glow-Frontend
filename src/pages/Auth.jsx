@@ -1,10 +1,45 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import { registerAPI } from '../services/allAPI';
 
 const Auth = ({ register }) => {
-   
-  const [userDetails,setUserDetails] = useState({username:"",email:"",password:""})
-  console.log(userDetails)
+
+  const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
+  const navigate = useNavigate()
+  // console.log(userDetails)
+
+  const handleRegister = async () => {
+    const { username, email, password } = userDetails
+
+    if (!username || !email || !password) {
+      toast.info("Please fill the form completely")
+    }
+    else{
+      try{
+        const result = await registerAPI(userDetails)
+        console.log(result)
+
+        if(result.status==200){
+          toast.success("Registration successfull!")
+          navigate('/login')
+          setUserDetails({username: "", email: "", password: "" })
+        }
+        else if(result.status==409){
+          toast.warning(result.response.data)
+          setUserDetails({username: "", email: "", password: "" })
+        }
+        else{
+          toast.error("Something went wrong")
+          setUserDetails({username: "", email: "", password: "" })
+        }
+
+      }
+      catch(err){
+        console.log(err)
+      }
+    }
+  }
 
   return (
 
@@ -25,16 +60,21 @@ const Auth = ({ register }) => {
 
           {
             register ?
-              <input onChange={(e)=>setUserDetails({...userDetails,username:e.target.value})} type="text" className='border border-gray-300 placeholder-gray-400 w-full p-2' placeholder='Name' />
+              <input value={userDetails.username} onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })} type="text" className='border border-gray-300 placeholder-gray-400 w-full p-2' placeholder='Name' />
               :
               ''
           }
 
-          <input onChange={(e)=>setUserDetails({...userDetails,email:e.target.value})} type="email" className='border border-gray-300 placeholder-gray-400 p-2 my-5 w-full' placeholder='Email' />
+          <input value={userDetails.email} onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })} type="email" className='border border-gray-300 placeholder-gray-400 p-2 my-5 w-full' placeholder='Email' />
 
-          <input onChange={(e)=>setUserDetails({...userDetails,password:e.target.value})} type="password" className='border border-gray-300 placeholder-gray-400 p-2 w-full' placeholder='Password' />
-
-          <button className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>{register ? 'Register' : 'Login'}</button>
+          <input value={userDetails.password} onChange={(e) => setUserDetails({ ...userDetails, password: e.target.value })} type="password" className='border border-gray-300 placeholder-gray-400 p-2 w-full' placeholder='Password' />
+          
+          {
+            register?
+           <button onClick={handleRegister} className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>Register</button>
+            :
+            <button className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>Login</button>
+          }
 
           <div className='flex justify-between w-full my-2 items-center'>
             <Link to={'/'}> <h6 className='font-bold text-sm cursor-pointer'>Home</h6></Link>
@@ -48,7 +88,19 @@ const Auth = ({ register }) => {
 
       </div>
 
-
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+       
+      />
 
     </div>
   )
