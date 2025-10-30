@@ -2,7 +2,7 @@ import React from 'react'
 
 const AdminSidebar = () => {
   return (
-    <div>AdminSidebar</div>
+    <div className='w-75 h-screen bg-black'>AdminSidebar</div>
   )
 }
 
