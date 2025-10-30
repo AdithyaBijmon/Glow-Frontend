@@ -1,9 +1,10 @@
 import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { faBars, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
 import { Link } from 'react-router-dom'
+import Header from '../components/Header'
 
 const Home = () => {
 
@@ -11,6 +12,17 @@ const Home = () => {
     const [testimonialPag1, setTestimonialPag1] = useState(true)
     const [testimonialPag2, setTestimonialPag2] = useState(false)
     const [testimonialPag3, setTestimonialPag3] = useState(false)
+    const [token, setToken] = useState("")
+    const [userMenu, setUserMenu] = useState("")
+
+    
+    useEffect(() => {
+        const userToken = JSON.parse(sessionStorage.getItem("token"))
+        if (userToken) {
+
+            setToken(userToken)
+        }
+    }, [token])
 
 
 
@@ -18,23 +30,7 @@ const Home = () => {
         <>
 
             {/* Home top contact header */}
-            <div className='md:flex hidden'>
-                <div className='w-full p-1 bg-black '>
-                    <div className='flex justify-between mx-15'>
-                        <p className='text-sm'><span className='text-gray-300'>Phone no :</span> <span className='text-white'>+91 9878675675 </span>  <span className='text-gray-300 ms-1'> or email us :</span> <span className='text-white'>glow@gmail.com</span></p>
-
-                        <div className='text-white flex'>
-                            <FontAwesomeIcon icon={faFacebookF} />
-                            <FontAwesomeIcon className='mx-4' icon={faInstagram} />
-                            <FontAwesomeIcon icon={faXTwitter} />
-
-                        </div>
-
-
-
-                    </div>
-                </div>
-            </div>
+            
 
             {/* Hero section */}
 
@@ -46,21 +42,7 @@ const Home = () => {
 
                     {/* User home page header */}
 
-                    <div className='md:flex justify-between items-center md:px-30 my-5 px-5'>
-                        <div className='flex justify-between '>
-                            <h1 className='font-bold text-4xl '>Glow.</h1>
-
-                            {/*small devices menu bar */}
-                            <FontAwesomeIcon onClick={() => setMenu(!menu)} icon={faBars} className='text-3xl md:!hidden' />
-                        </div>
-                        <ul className={menu ? 'md:flex items-center md:mt-0 mt-3 md:text-base text-xl text-center' : 'md:flex hidden items-center  cursor-pointer'}>
-                            <Link to={'/'}><li className='text-gray-300 hover:text-white'>Home</li></Link>
-                            <Link to={'/about'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> About</li></Link>
-                            <Link to={'/services'}><li className='text-gray-300 hover:text-white'> Services</li></Link>
-                            <Link to={'/contact'}><li className='md:mx-10 md:my-0 my-2 text-gray-300 hover:text-white'> Contact</li></Link>
-                            <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold hover:bg-yellow-400 cursor-pointer'>Login</button></li></Link>
-                        </ul>
-                    </div>
+                   <Header/>
 
                     {/* Hero section headings */}
 
@@ -138,7 +120,7 @@ const Home = () => {
 
                 {/* Testimonial details */}
                 <div className='w-full shadow-xl  flex justify-center items-center flex-col my-10 p-5 relative '>
-                    <img style={{width:'120px',height:'120px'}} className='rounded-full my-3 object-cover' src={testimonialPag1 ? "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=3017" : testimonialPag2 ? "https://img.freepik.com/free-photo/horizontal-portrait-smiling-happy-young-pleasant-looking-female-wears-denim-shirt-stylish-glasses-with-straight-blonde-hair-expresses-positiveness-poses_176420-13176.jpg?semt=ais_hybrid&w=740&q=80" : "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ="} alt="" />
+                    <img style={{ width: '120px', height: '120px' }} className='rounded-full my-3 object-cover' src={testimonialPag1 ? "https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=3017" : testimonialPag2 ? "https://img.freepik.com/free-photo/horizontal-portrait-smiling-happy-young-pleasant-looking-female-wears-denim-shirt-stylish-glasses-with-straight-blonde-hair-expresses-positiveness-poses_176420-13176.jpg?semt=ais_hybrid&w=740&q=80" : "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ="} alt="" />
                     <h3 className='text-yellow-500 text-xl font-semibold'>{testimonialPag1 ? 'James Steve' : testimonialPag2 ? 'Ayona Martin' : 'Julia Samuvel'}</h3>
                     <p className='font-semibold text-lg'>“Friendly  services  and i  loved it.”</p>
 

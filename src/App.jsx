@@ -7,6 +7,7 @@ import Contact from './user/pages/Contact'
 import Auth from './pages/Auth'
 import Pnf from './pages/Pnf'
 import Profile from './user/pages/Profile'
+import AdminDashboard from './admin/pages/AdminDashboard'
 
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   return (
     <>
       <Routes>
+        {/* user */}
         <Route path='/' element={<Home/>}/>
         <Route path='/about' element={<About/>}/>
         <Route path='/services' element={<Services/>}/>
@@ -22,6 +24,9 @@ function App() {
         <Route path='/register' element={<Auth register/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/*' element={<Pnf/>}/>
+
+        {/* admin */}
+        <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
 
 
       </Routes>

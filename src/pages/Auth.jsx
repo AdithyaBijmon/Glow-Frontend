@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
-import { registerAPI } from '../services/allAPI';
+import { loginAPI, registerAPI } from '../services/allAPI';
 
 const Auth = ({ register }) => {
 
   const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
   const navigate = useNavigate()
-  // console.log(userDetails)
+  console.log(userDetails)
 
   const handleRegister = async () => {
     const { username, email, password } = userDetails
@@ -15,27 +15,71 @@ const Auth = ({ register }) => {
     if (!username || !email || !password) {
       toast.info("Please fill the form completely")
     }
-    else{
-      try{
+    else {
+      try {
         const result = await registerAPI(userDetails)
         console.log(result)
 
-        if(result.status==200){
+        if (result.status == 200) {
           toast.success("Registration successfull!")
           navigate('/login')
-          setUserDetails({username: "", email: "", password: "" })
+          setUserDetails({ username: "", email: "", password: "" })
         }
-        else if(result.status==409){
+        else if (result.status == 409) {
           toast.warning(result.response.data)
-          setUserDetails({username: "", email: "", password: "" })
+          setUserDetails({ username: "", email: "", password: "" })
         }
-        else{
+        else {
           toast.error("Something went wrong")
-          setUserDetails({username: "", email: "", password: "" })
+          setUserDetails({ username: "", email: "", password: "" })
         }
 
       }
-      catch(err){
+      catch (err) {
+        console.log(err)
+      }
+    }
+  }
+
+  const handleLogin = async () => {
+    const { email, password } = userDetails
+    if (!email || !password) {
+      toast.info("Please fill the form completely")
+    }
+    else {
+      try {
+        const result = await loginAPI(userDetails)
+        if (result.status == 200) {
+          toast.success("Login successful")
+          sessionStorage.setItem("user", JSON.stringify(result.data.user))
+          sessionStorage.setItem("token", JSON.stringify(result.data.token))
+
+          setTimeout(() => {
+            if(result.data.user.role=='user'){
+              navigate('/')
+            }
+            else{
+              navigate('/admin-dashboard')
+            }
+          }, 3000);
+        }
+
+        else if (result.status == 401) {
+          toast.warning(result.data)
+          setUserDetails({ email: "", password: "" })
+        }
+        else if (result.status == 409) {
+          toast.warning(result.data)
+          setUserDetails({ email: "", password: "" })
+        }
+        else {
+          toast.warning(result.data)
+          setUserDetails({ email: "", password: "" })
+        }
+
+
+      }
+      catch (err) {
         console.log(err)
       }
     }
@@ -68,12 +112,12 @@ const Auth = ({ register }) => {
           <input value={userDetails.email} onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })} type="email" className='border border-gray-300 placeholder-gray-400 p-2 my-5 w-full' placeholder='Email' />
 
           <input value={userDetails.password} onChange={(e) => setUserDetails({ ...userDetails, password: e.target.value })} type="password" className='border border-gray-300 placeholder-gray-400 p-2 w-full' placeholder='Password' />
-          
+
           {
-            register?
-           <button onClick={handleRegister} className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>Register</button>
-            :
-            <button className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>Login</button>
+            register ?
+              <button onClick={handleRegister} className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>Register</button>
+              :
+              <button onClick={handleLogin} className='bg-black p-2 text-white font-bold w-full  mt-5 cursor-pointer'>Login</button>
           }
 
           <div className='flex justify-between w-full my-2 items-center'>
@@ -99,7 +143,7 @@ const Auth = ({ register }) => {
         draggable
         pauseOnHover
         theme="dark"
-       
+
       />
 
     </div>
