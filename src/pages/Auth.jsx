@@ -65,15 +65,15 @@ const Auth = ({ register }) => {
         }
 
         else if (result.status == 401) {
-          toast.warning(result.data)
+          toast.warning("Invalid email or password")
           setUserDetails({ email: "", password: "" })
         }
-        else if (result.status == 409) {
-          toast.warning(result.data)
+        else if (result.status == 404) {
+          toast.warning("Account does not exist.")
           setUserDetails({ email: "", password: "" })
         }
         else {
-          toast.warning(result.data)
+          toast.warning("Something went wrong")
           setUserDetails({ email: "", password: "" })
         }
 

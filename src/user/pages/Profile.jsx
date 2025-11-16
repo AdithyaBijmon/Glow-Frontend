@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen } from '@fortawesome/free-solid-svg-icons'
@@ -8,6 +8,15 @@ const Profile = () => {
 
     const [appoint, setAppoint] = useState(true)
     const [history, setHistory] = useState(false)
+    const [userDetails,setUserDetails] = useState({})
+
+    useEffect(() => {
+        const token = JSON.parse(sessionStorage.getItem("token"))
+        if (token) {
+        const user = JSON.parse(sessionStorage.getItem("user"))
+        setUserDetails(user)
+        }
+    }, [])
     return (
 
         <>
@@ -16,8 +25,8 @@ const Profile = () => {
                 <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZmVtYWxlJTIwcHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000" alt="" />
 
                 <div className='flex flex-col justify-center'>
-                    <h1 className='md:text-3xl text-2xl font-bold '>Sona Jacob</h1>
-                    <p className='semibold text-md mb-3 '>sona@gmail.com</p>
+                    <h1 className='md:text-3xl text-2xl font-bold '>{userDetails.username}</h1>
+                    <p className='semibold text-md mb-3 '>{userDetails.email}</p>
                     <FontAwesomeIcon icon={faPen} />
                 </div>
             </div>
@@ -105,7 +114,7 @@ const Profile = () => {
                 </>
             }
 
-            <Footer/>
+            <Footer />
         </>
     )
 }
