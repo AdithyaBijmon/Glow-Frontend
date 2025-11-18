@@ -1,13 +1,49 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminHeader from '../components/AdminHeader'
 import Footer from '../../components/Footer'
 import AdminSidebar from '../components/AdminSidebar'
 import { ToastContainer, toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMultiply } from '@fortawesome/free-solid-svg-icons'
+import { faMultiply, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { getAllJobsAPI } from '../../services/allAPI'
+
 
 const AdminCareers = () => {
   const [modalStatus, setModalStatus] = useState(false)
+  const [allJobs, setAllJobs] = useState([])
+  const [jobs, setJobs] = useState({ jobTitle: "", jobDescription: "", jobType: "", salary: "", experience: "", qualification: "", eligibility: "" })
+  console.log(jobs);
+
+
+  useEffect(() => {
+    getAllJobs()
+  }, [])
+
+  // console.log(allJobs)
+
+  const getAllJobs = async () => {
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+
+    try {
+      const result = await getAllJobsAPI(reqHeader)
+      if (result.status == 200) {
+        setAllJobs(result.data)
+
+      }
+      else {
+        toast.error("Something went wrong")
+      }
+
+    }
+    catch (err) {
+      console.log(err);
+
+    }
+  }
+
   return (
     <>
       <AdminHeader />
@@ -18,60 +54,103 @@ const AdminCareers = () => {
           <div className="flex justify-end px-5">
             <button onClick={() => setModalStatus(true)} className='text-white bg-green-500 p-2 hover:bg-green-400 cursor-pointer mt-3'>+Add Job</button>
           </div>
+
+          <div>
+            <div className="md:grid grid-cols-4 gap-5 my-2 p-5">
+
+
+              {
+                allJobs.length > 0 ?
+                  allJobs?.map(job => (
+                    <div key={job?._id} className="shadow w-full p-3">
+                      <div className='flex justify-end my-2'><button className='cursor-pointer' ><FontAwesomeIcon className='text-red-500 text-xl' icon={faTrash} /></button></div>
+
+                      <div >
+                        <h3 className='text-xl text-black mt-3 font-bold'>{job?.jobTitle}</h3>
+                        <p className='mt-3 '>Salary:{job?.salary}</p>
+                        <p className='mt-3 '>Job Type:{job?.jobType}</p>
+                        <p className='mt-3 '>Qualification:{job?.qualification}</p>
+                        <p className='mt-3 '>Experience:{job?.experience}</p>
+                        <p className='mt-3 '>Eligibility:{job?.eligibility}</p>
+                        <p className='mt-3 '>Description: {job?.jobDescription}</p>
+                      </div>
+                    </div>
+                  ))
+                  :
+                  <p>No jobs added.</p>
+              }
+
+
+
+
+
+
+            </div>
+
+          </div>
         </div>
       </div>
       <Footer />
-        <ToastContainer
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
 
-            />
+      />
 
-            {
-                modalStatus &&
-                <div className='bg-black/75 w-full h-full fixed z-51 inset-0 flex items-center justify-center'>
+      {
+        modalStatus &&
+        <div className='bg-black/75 w-full h-full fixed z-51 inset-0 flex items-center justify-center'>
 
-                    <div className= "w-100 h-85 p-5 bg-white">
-                        <div className='flex justify-between items-center'>
-                            <h1 className='text-xl font-bold'>Add new Job</h1>
-                            <button onClick={() => setModalStatus(false)} className='cursor-pointer'><FontAwesomeIcon icon={faMultiply} className='text-xl' /></button>
-                        </div>
+          <div className="w-100 h-90 p-5 bg-white">
+            <div className='flex justify-between items-center'>
+              <h1 className='text-xl font-bold'>New Job Opening</h1>
+              <button onClick={() => setModalStatus(false)} className='cursor-pointer'><FontAwesomeIcon icon={faMultiply} className='text-xl' /></button>
+            </div>
 
-                        <div className='my-4'>
-                            <input  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400' placeholder='Service name' />
-                            <input  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 my-3' placeholder='Description' />
-                            <div className='flex mb-3'>
-                                <input  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Category eg:Skin,nails' />
-                                <input  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Price ' />
-                            </div>
-                           
-                           
+            <div className='my-3'>
 
-                        </div>
+              <div className='flex mb-3'>
+                <input value={jobs.jobTitle} onChange={(e) => setJobs({ ...jobs, jobTitle: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Job Title' />
+                <input value={jobs.salary} onChange={(e) => setJobs({ ...jobs, salary: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Salary ' />
+              </div>
 
-                        <div className='flex justify-between my-3'>
-                            <button  className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
-                            <button  className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>ADD</button>
+              <div className='flex mb-3'>
+                <input value={jobs.jobType} onChange={(e) => setJobs({ ...jobs, jobType: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Job Type' />
+                <input value={jobs.experience} onChange={(e) => setJobs({ ...jobs, experience: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Experience ' />
+              </div>
 
-                        </div>
+              <div className='flex mb-3'>
+                <input value={jobs.qualification} onChange={(e) => setJobs({ ...jobs, qualification: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Qualification ' />
+                <input value={jobs.eligibility} onChange={(e) => setJobs({ ...jobs, eligibility: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Eligibility' />
+              </div>
+
+              <textarea value={jobs.jobDescription} onChange={(e) => setJobs({ ...jobs, jobDescription: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400' placeholder='Job Description ' ></textarea>
+
+            </div>
+
+            <div className='flex justify-between my-1'>
+              <button className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer  '>RESET</button>
+              <button className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer '>ADD</button>
+
+            </div>
 
 
-                    </div>
+          </div>
 
 
 
-                </div>
-            }
+        </div>
+      }
 
-      
+
     </>
   )
 }

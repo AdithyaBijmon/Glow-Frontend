@@ -29,3 +29,8 @@ export const getAllServicesAPI = async (reqHeader)=>{
 export const removeServiceAPI = async (id,reqHeader)=>{
   return await commonAPI("DELETE",`${SERVERURL}/remove/${id}/service`,{},reqHeader)
 }
+
+// -------- Get all Jobs ---------
+export const getAllJobsAPI = async (reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/all-jobs`,{},reqHeader)
+}
