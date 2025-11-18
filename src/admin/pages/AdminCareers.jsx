@@ -5,7 +5,7 @@ import AdminSidebar from '../components/AdminSidebar'
 import { ToastContainer, toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMultiply, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { getAllJobsAPI } from '../../services/allAPI'
+import { addJobAPI, getAllJobsAPI, removeJobAPI } from '../../services/allAPI'
 
 
 const AdminCareers = () => {
@@ -17,7 +17,7 @@ const AdminCareers = () => {
 
   useEffect(() => {
     getAllJobs()
-  }, [])
+  }, [jobs])
 
   // console.log(allJobs)
 
@@ -44,6 +44,77 @@ const AdminCareers = () => {
     }
   }
 
+  const handleReset = () => {
+    setJobs({ jobTitle: "", jobDescription: "", jobType: "", salary: "", experience: "", qualification: "", eligibility: "" })
+  }
+
+  const handleAddJob = async () => {
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+
+    const {jobTitle,jobDescription,jobType,salary,experience,qualification,eligibility} = jobs
+
+    try {
+
+      if (!jobTitle || !jobDescription || !jobType || !salary || !experience || !qualification || !eligibility) {
+        toast.info("Fill the form completely.")
+      }
+
+      else {
+
+        const result = await addJobAPI(jobs, reqHeader)
+        if (result.status == 200) {
+          toast.success("Job added successfully.")
+          handleReset()
+          setModalStatus(false)
+        }
+        else if (result.status == 409) {
+          toast.warn(result.response.data)
+          handleReset()
+        }
+        else {
+          toast.error("Something went wrong")
+          handleReset()
+        }
+
+      }
+
+
+    }
+    catch (err) {
+      console.log(err)
+    }
+
+
+  }
+
+  const handleRemoveJob = async (id) => {
+          const token = JSON.parse(sessionStorage.getItem("token"))
+          const reqHeader = {
+              "Authorization": `Bearer ${token}`
+          }
+          try {
+  
+              const result = await removeJobAPI(id, reqHeader)
+              if (result.status == 200) {
+                  toast.success("Job deleted successfully.")
+                  getAllJobs()
+  
+              }
+              else {
+                  toast.error("Something went wrong.")
+              }
+  
+          }
+          catch (err) {
+              console.log(err)
+          }
+      }
+
+  
+
   return (
     <>
       <AdminHeader />
@@ -63,7 +134,7 @@ const AdminCareers = () => {
                 allJobs.length > 0 ?
                   allJobs?.map(job => (
                     <div key={job?._id} className="shadow w-full p-3">
-                      <div className='flex justify-end my-2'><button className='cursor-pointer' ><FontAwesomeIcon className='text-red-500 text-xl' icon={faTrash} /></button></div>
+                      <div className='flex justify-end my-2'><button onClick={()=>handleRemoveJob(job?._id)} className='cursor-pointer' ><FontAwesomeIcon className='text-red-500 text-xl' icon={faTrash} /></button></div>
 
                       <div >
                         <h3 className='text-xl text-black mt-3 font-bold'>{job?.jobTitle}</h3>
@@ -137,8 +208,8 @@ const AdminCareers = () => {
             </div>
 
             <div className='flex justify-between my-1'>
-              <button className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer  '>RESET</button>
-              <button className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer '>ADD</button>
+              <button onClick={handleReset} className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer  '>RESET</button>
+              <button onClick={handleAddJob} className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer '>ADD</button>
 
             </div>
 
