@@ -1,17 +1,30 @@
 import { faBriefcase, faChartSimple, faClipboard, faFileLines, faGears, faHandshake } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import SERVERURL from '../../services/ServerURL'
+import { adminUpdateContext } from '../../contextAPI/ShareContext'
 
 const AdminSidebar = () => {
+  const {adminEditResponse} = useContext(adminUpdateContext)
+  const [adminDp,setAdminDp] = useState("")
+  const [adminName,setAdminName] = useState("")
+
+  useEffect(()=>{
+
+    const user = JSON.parse(sessionStorage.getItem("user"))
+    setAdminDp(user.profile)
+    setAdminName(user.username)
+
+  },[adminEditResponse])
   
 
   return (
     <div className='md:w-80 md:h-full w-100 p-5 my-10'>
       <div className='bg-white shadow-xl md:h-full md:my-10 mt-10 md:p-10 p-5 '>
        <div className='flex md:justify-between items-center'>
-          <img src="https://freesvg.org/img/1459344336.png" alt="admin" style={{width:'60px',height:'60px',borderRadius:'50%'}}/>
-          <h3 className='text-xl font-bold'>Admin Name</h3>
+          <img src={adminDp==""?"https://freesvg.org/img/1459344336.png":`${SERVERURL}/uploads/${adminDp}`} alt="admin" style={{width:'50px',height:'50px',borderRadius:'50%'}}/>
+          <h3 className='text-lg font-bold'>{adminName}</h3>
        </div>
 
        <div className='md:my-10 my-5 flex justify-center font-semibold'>

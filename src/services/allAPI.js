@@ -44,3 +44,8 @@ export const getAllJobsAPI = async (reqHeader)=>{
 export const removeJobAPI = async (id,reqHeader)=>{
   return await commonAPI("DELETE",`${SERVERURL}/remove/${id}/job`,{},reqHeader)
 }
+
+// -------- Update Admin Details-----------
+export const editAdminDetailsAPI = async (reqBody,reqHeader)=>{
+  return await commonAPI("PUT",`${SERVERURL}/edit/admin`,reqBody,reqHeader)
+}
