@@ -5,6 +5,9 @@ import { faBars, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
 import { Link } from 'react-router-dom'
 import Header from '../components/Header'
+import { getHomeServicesAPI } from '../../services/allAPI'
+import { ToastContainer, toast } from 'react-toastify'
+import SERVERURL from '../../services/ServerURL'
 
 const Home = () => {
 
@@ -13,16 +16,36 @@ const Home = () => {
     const [testimonialPag2, setTestimonialPag2] = useState(false)
     const [testimonialPag3, setTestimonialPag3] = useState(false)
     const [token, setToken] = useState("")
-    const [userMenu, setUserMenu] = useState("")
+    const [homeServices, setHomeServices] = useState([])
+    console.log(homeServices)
 
-    
+
     useEffect(() => {
+        getHomeServices()
         const userToken = JSON.parse(sessionStorage.getItem("token"))
         if (userToken) {
 
             setToken(userToken)
+
         }
     }, [token])
+
+    const getHomeServices = async () => {
+        try {
+            const result = await getHomeServicesAPI()
+            if (result.status == 200) {
+                setHomeServices(result.data)
+
+            }
+            else {
+                toast.error("Something went wrong")
+            }
+
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
 
 
 
@@ -30,7 +53,7 @@ const Home = () => {
         <>
 
             {/* Home top contact header */}
-            
+
 
             {/* Hero section */}
 
@@ -42,7 +65,7 @@ const Home = () => {
 
                     {/* User home page header */}
 
-                   <Header/>
+                    <Header />
 
                     {/* Hero section headings */}
 
@@ -84,22 +107,22 @@ const Home = () => {
                 <h4 className='font-semibold text-md text-yellow-500 text-center mt-3 md:mt-0'>OUR SERVICES</h4>
                 <h1 className='font-bold md:text-5xl text-3xl text-center'>From head to toe, we've <br className='hidden md:inline' /> got you covered</h1>
 
-                <div className="md:grid grid-cols-3 gap-5 my-10">
-                    <div className="shadow w-full p-3">
-                        <img className='w-full h-80 object-cover' src="https://www.bodycraft.co.in/hubfs/Imported_Blog_Media/beautiful-keratin-treated-hair-1-1.jpg" alt="" />
-                        <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold'>Smoothening</h3>
-                    </div>
-                    <div className="shadow w-full p-3 md:my-0 my-5">
-                        <img className='w-full h-80 object-cover' src="https://img.freepik.com/free-photo/young-bearded-man-hairdresser-salon_1163-2019.jpg?semt=ais_hybrid&w=740&q=80" alt="" />
-                        <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold'>Hair Cut</h3>
-                    </div>
-                    <div className="shadow w-full p-3">
-                        <img className='w-full h-80 object-cover' src="https://m.media-amazon.com/images/I/61qd8hwOc9L._UF1000,1000_QL80_.jpg" alt="" />
-                        <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold' >Manicure</h3>
-                    </div>
+                <div className="md:grid grid-cols-4 gap-5 my-10">
+                    {
+                        homeServices.length > 0 ?
+                            homeServices?.map(service => (
+                                <div key={service?._id} className="shadow w-full p-3">
+                                    <img className='w-full h-80 object-cover' src={`${SERVERURL}/uploads/${service?.serviceImg}`} alt="" />
+                                    <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold'>{service?.serviceName}</h3>
+                                </div>
+                            ))
+                            :
+                            <p>No Services available.</p>
+                    }
+
                 </div>
 
-                <div className='flex justify-center'><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer hover:bg-yellow-400'>Explore more</button></div>
+                <div className='flex justify-center'><Link to={'/services'}><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer hover:bg-yellow-400'>Explore more</button></Link></div>
             </div>
 
             {/* Discount */}
@@ -137,6 +160,19 @@ const Home = () => {
             </div>
 
             <Footer />
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+
+            />
 
 
 

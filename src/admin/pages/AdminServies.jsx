@@ -77,13 +77,10 @@ const AdminServies = () => {
     }
 
     const getAllServices = async () => {
-        const token = JSON.parse(sessionStorage.getItem("token"))
-        const reqHeader = {
-            "Authorization": `Bearer ${token}`
-        }
+        
 
         try {
-            const result = await getAllServicesAPI(reqHeader)
+            const result = await getAllServicesAPI()
             // console.log(result)
             setAllServices(result.data)
 
