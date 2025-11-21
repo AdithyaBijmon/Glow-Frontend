@@ -71,9 +71,9 @@ const Header = ({ navblack }) => {
 
                 {
                   userMenu &&
-                  <div className='absolute px-4 py-1 bg-white text-black/80 md:top-9 md:left-5 left-40 flex flex-col text-sm'>
-                    <Link to={'/profile'} className='mt-2'>Profile</Link>
-                    <button onClick={logout}><Link className='my-2'>Logout</Link></button>
+                  <div className='absolute px-4 py-1 bg-white text-black/80 md:top-9 md:left-5 left-40 flex flex-col text-md'>
+                    <Link to={'/profile'} >Profile</Link>
+                    <button onClick={logout}><Link className='my-3'>Logout</Link></button>
 
                   </div>
                 }

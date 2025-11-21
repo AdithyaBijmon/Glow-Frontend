@@ -12,6 +12,7 @@ import Appointments from './admin/pages/Appointments'
 import AdminSettings from './admin/pages/AdminSettings'
 import AdminCareers from './admin/pages/AdminCareers'
 import AdminServies from './admin/pages/AdminServies'
+import Careers from './user/pages/Careers'
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path='/login' element={<Auth/>}/>
         <Route path='/register' element={<Auth register/>}/>
         <Route path='/profile' element={<Profile/>}/>
+        <Route path='/careers' element={<Careers/>}/>
         <Route path='/*' element={<Pnf/>}/>
 
         {/* admin */}

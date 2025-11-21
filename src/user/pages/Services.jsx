@@ -10,6 +10,7 @@ import SERVERURL from '../../services/ServerURL'
 const Services = () => {
   const [userToken, setUserToken] = useState("")
   const [allServices, setAllServices] = useState([])
+  const [searchKey,setSearchKey] = useState("")
 
   useEffect(() => {
     const token = JSON.parse(sessionStorage.getItem("token"))
@@ -18,13 +19,11 @@ const Services = () => {
       getAllServices()
 
     }
-  }, [])
+  }, [searchKey])
 
   const getAllServices = async () => {
-
-
     try {
-      const result = await getAllServicesAPI()
+      const result = await getAllServicesAPI(searchKey)
       // console.log(result)
       setAllServices(result.data)
 
@@ -57,7 +56,7 @@ const Services = () => {
 
             {/* Search input and button */}
             <div className='md:px-50 px-15 my-20 '>
-              <input type="text" className='border border-black placeholder-gray-400 p-2' placeholder='Search services here...' />
+              <input value={searchKey} onChange={(e)=>setSearchKey(e.target.value)} type="text" className='border border-black placeholder-gray-400 p-2' placeholder='Search services here...' />
               <button className='bg-yellow-500 px-3 py-2 ms-3 text-black hover:bg-yellow-400'><FontAwesomeIcon icon={faSearch} /></button>
             </div>
 

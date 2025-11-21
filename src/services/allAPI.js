@@ -21,8 +21,8 @@ export const addServiceAPI = async (reqBody,reqHeader)=>{
 }
 
 // --------- All services----------
-export const getAllServicesAPI = async ()=>{
-  return await commonAPI("GET",`${SERVERURL}/all-services`,{})
+export const getAllServicesAPI = async (search)=>{
+  return await commonAPI("GET",`${SERVERURL}/all-services?search=${search}`,{})
 }
 
 // -------- Delete Service ------------
@@ -53,4 +53,8 @@ export const editAdminDetailsAPI = async (reqBody,reqHeader)=>{
 // ------------ USER --------------------
 export const getHomeServicesAPI = async ()=>{
   return await commonAPI("GET",`${SERVERURL}/home-services`,{})
+}
+
+export const getAllUserJobsAPI = async (search,reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/all/user/jobs?search=${search}`,{},reqHeader)
 }

@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPen } from '@fortawesome/free-solid-svg-icons'
+import { faMultiply, faPen } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
 
 const Profile = () => {
 
     const [appoint, setAppoint] = useState(true)
     const [history, setHistory] = useState(false)
-    const [userDetails,setUserDetails] = useState({})
+    const [userDetails, setUserDetails] = useState({})
+    const [offCanvasStatus, setOffCanvasStatus] = useState(false)
 
     useEffect(() => {
         const token = JSON.parse(sessionStorage.getItem("token"))
         if (token) {
-        const user = JSON.parse(sessionStorage.getItem("user"))
-        setUserDetails(user)
+            const user = JSON.parse(sessionStorage.getItem("user"))
+            setUserDetails(user)
         }
     }, [])
     return (
@@ -22,12 +23,12 @@ const Profile = () => {
         <>
             <Header navblack />
             <div className='md:mx-20 mx-10 md:flex justify-between my-20 px-20  items-center bg-yellow-500/50 p-5'>
-                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZmVtYWxlJTIwcHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000" alt="" />
+                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="" />
 
                 <div className='flex flex-col justify-center'>
                     <h1 className='md:text-3xl text-2xl font-bold '>{userDetails.username}</h1>
                     <p className='semibold text-md mb-3 '>{userDetails.email}</p>
-                    <FontAwesomeIcon icon={faPen} />
+                    <button onClick={() => setOffCanvasStatus(true)}><FontAwesomeIcon icon={faPen} /></button>
                 </div>
             </div>
 
@@ -112,6 +113,25 @@ const Profile = () => {
                         </div>
                     </div>
                 </>
+            }
+
+            {
+                offCanvasStatus &&
+                <div className='fixed inset-0 z-50 flex justify-end'>
+
+                    
+                    <div className='absolute inset-0 bg-black/50' ></div>
+
+                   
+                    <div className='absolute w-72 h-full bg-white shadow-xl'>
+                      
+                        <div className='flex justify-between'>
+                            <h3 className="p-4 font-bold">Edit User Profile</h3>
+                            <button onClick={()=>setOffCanvasStatus(false)}><FontAwesomeIcon className='text-xl' icon={faMultiply}/> </button>
+                        </div>
+                    </div>
+
+                </div>
             }
 
             <Footer />

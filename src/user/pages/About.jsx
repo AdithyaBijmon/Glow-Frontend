@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
+import { Link } from 'react-router-dom'
 
 const About = () => {
   return (
@@ -70,6 +71,18 @@ const About = () => {
           </div>
 
         </div>
+      </div>
+
+      <div className='md:px-20 my-20'>
+
+        <h4 className='font-semibold text-md text-yellow-500 text-center mt-3 md:mt-0'>JOIN TEAM</h4>
+        <h1 className='font-bold md:text-5xl text-3xl text-center my-3'>Want to Join our team?</h1>
+        <p className='md:text-center text-justify md:px-20 px-5 my-5'>Are you passionate about beauty, dedicated to customer service, and ready to grow your skills in a vibrant, supportive environment? At Glow, we believe our team is the heart of our success. We offer more than just a job—we offer a career path where creativity thrives, education is continuous, and every team member is valued. If you're ready to make clients look and feel their absolute best, we'd love to meet you.</p>
+         <div className='flex justify-center'><Link to={'/careers'}><button className='bg-yellow-500 px-4 py-2 text-black font-bold  mt-5 cursor-pointer hover:bg-yellow-400'>Start Your Journey</button></Link></div>
+           
+
+
+        
       </div>
 
 
