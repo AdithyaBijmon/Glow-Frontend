@@ -119,15 +119,36 @@ const Profile = () => {
                 offCanvasStatus &&
                 <div className='fixed inset-0 z-50 flex justify-end'>
 
-                    
+
                     <div className='absolute inset-0 bg-black/50' ></div>
 
-                   
-                    <div className='absolute w-72 h-full bg-white shadow-xl'>
-                      
-                        <div className='flex justify-between'>
+
+                    <div className='absolute md:w-72 w-full h-full bg-white shadow-xl'>
+
+                        <div className='flex justify-between mx-5'>
                             <h3 className="p-4 font-bold">Edit User Profile</h3>
-                            <button onClick={()=>setOffCanvasStatus(false)}><FontAwesomeIcon className='text-xl' icon={faMultiply}/> </button>
+                            <button onClick={() => setOffCanvasStatus(false)}><FontAwesomeIcon className='text-xl' icon={faMultiply} /> </button>
+                        </div>
+
+                        <div className='flex justify-center my-5'>
+                            <label htmlFor='profile-img'>
+                                <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="" />
+                                <FontAwesomeIcon  className='absolute top-20 md:right-20 right-40 bg-yellow-500 p-2 rounded-full text-sm' icon={faPen}/>
+                                <input type="file"  className='hidden' id='profile-img' />
+                            </label>
+                        </div>
+
+                        <div className='mx-5'>
+                            <input value={userDetails.username} onChange={(e)=>setUserDetails({...userDetails,username:e.target.value})} type="text" className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Username' />
+                            <input value={userDetails.email} type="email" className='w-full my-3 border border-gray-400 p-1 bg-gray-200' readOnly />
+                            <input value={userDetails.password} onChange={(e)=>setUserDetails({...userDetails,password:e.target.value})} type="text" className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Password' />
+                            <input value={userDetails.password} type="password" className='w-full my-3 placeholder-gray-400 border border-gray-400 p-1' placeholder='Confirm Password' />
+
+                            <div className='flex justify-between my-3'>
+                            <button  className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
+                            <button  className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>UPDATE</button>
+
+                        </div>
                         </div>
                     </div>
 
