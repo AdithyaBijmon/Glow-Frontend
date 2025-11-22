@@ -13,6 +13,8 @@ const AdminCareers = () => {
   const [allJobs, setAllJobs] = useState([])
   const [jobs, setJobs] = useState({ jobTitle: "", jobDescription: "", jobType: "", salary: "", experience: "", qualification: "", eligibility: "" })
   console.log(jobs);
+  const [jobSection, setJobSection] = useState(true)
+  const [applicants, setApplicants] = useState(false)
 
 
   useEffect(() => {
@@ -54,7 +56,7 @@ const AdminCareers = () => {
       "Authorization": `Bearer ${token}`
     }
 
-    const {jobTitle,jobDescription,jobType,salary,experience,qualification,eligibility} = jobs
+    const { jobTitle, jobDescription, jobType, salary, experience, qualification, eligibility } = jobs
 
     try {
 
@@ -91,29 +93,29 @@ const AdminCareers = () => {
   }
 
   const handleRemoveJob = async (id) => {
-          const token = JSON.parse(sessionStorage.getItem("token"))
-          const reqHeader = {
-              "Authorization": `Bearer ${token}`
-          }
-          try {
-  
-              const result = await removeJobAPI(id, reqHeader)
-              if (result.status == 200) {
-                  toast.success("Job deleted successfully.")
-                  getAllJobs()
-  
-              }
-              else {
-                  toast.error("Something went wrong.")
-              }
-  
-          }
-          catch (err) {
-              console.log(err)
-          }
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+    try {
+
+      const result = await removeJobAPI(id, reqHeader)
+      if (result.status == 200) {
+        toast.success("Job deleted successfully.")
+        getAllJobs()
+
+      }
+      else {
+        toast.error("Something went wrong.")
       }
 
-  
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
+
 
   return (
     <>
@@ -122,41 +124,134 @@ const AdminCareers = () => {
         <div className='col-span-1'><AdminSidebar /></div>
         <div className='col-span-4 p-5 md:mt-24'>
           <h1 className='text-center font-bold text-3xl'>Job Postings & Applicants</h1>
-          <div className="flex justify-end px-5">
-            <button onClick={() => setModalStatus(true)} className='text-white bg-green-500 p-2 hover:bg-green-400 cursor-pointer mt-3'>+Add Job</button>
+          <div className='flex justify-center flex-grow items-center my-7'>
+            <button onClick={() => { setJobSection(true); setApplicants(false) }} className={jobSection ? 'border-b-5 cursor-pointer text-lg' : 'text-sm cursor-pointer'}>Jobs</button>
+            <button onClick={() => { setJobSection(false); setApplicants(true) }} className={applicants ? 'border-b-5 ms-5 cursor-pointer text-lg' : 'ms-5 text-sm cursor-pointer'}>Applicants</button>
           </div>
 
+
           <div>
-            <div className="md:grid grid-cols-4 gap-5 my-2 p-5">
+            {
+              jobSection &&
+
+              <>
+                <div className="flex justify-end px-5">
+                  <button onClick={() => setModalStatus(true)} className='text-white bg-green-500 p-2 hover:bg-green-400 cursor-pointer mt-3'>+Add Job</button>
+                </div>
+                <div className="md:grid grid-cols-4 gap-5 my-2 p-5">
 
 
-              {
-                allJobs.length > 0 ?
-                  allJobs?.map(job => (
-                    <div key={job?._id} className="shadow w-full p-3">
-                      <div className='flex justify-end my-2'><button onClick={()=>handleRemoveJob(job?._id)} className='cursor-pointer' ><FontAwesomeIcon className='text-red-500 text-xl' icon={faTrash} /></button></div>
+                  {
+                    allJobs.length > 0 ?
+                      allJobs?.map(job => (
+                        <div key={job?._id} className="shadow w-full p-3">
+                          <div className='flex justify-end my-2'><button onClick={() => handleRemoveJob(job?._id)} className='cursor-pointer' ><FontAwesomeIcon className='text-red-500 text-xl' icon={faTrash} /></button></div>
 
-                      <div >
-                        <h3 className='text-xl text-black mt-3 font-bold'>{job?.jobTitle}</h3>
-                        <p className='mt-3 '>Salary:{job?.salary}</p>
-                        <p className='mt-3 '>Job Type:{job?.jobType}</p>
-                        <p className='mt-3 '>Qualification:{job?.qualification}</p>
-                        <p className='mt-3 '>Experience:{job?.experience}</p>
-                        <p className='mt-3 '>Eligibility:{job?.eligibility}</p>
-                        <p className='mt-3 '>Description: {job?.jobDescription}</p>
-                      </div>
-                    </div>
-                  ))
-                  :
-                  <p>No jobs added.</p>
-              }
+                          <div >
+                            <h3 className='text-xl text-black mt-3 font-bold'>{job?.jobTitle}</h3>
+                            <p className='mt-3 '><span className="font-semibold">Salary:</span>{job?.salary}</p>
+                            <p className='mt-3 '><span className="font-semibold">Job Type:</span>{job?.jobType}</p>
+                            <p className='mt-3 '><span className="font-semibold">Qualification:</span>{job?.qualification}</p>
+                            <p className='mt-3 '><span className="font-semibold">Experience:</span>{job?.experience}</p>
+                            <p className='mt-3 '><span className="font-semibold">Eligibility:</span>{job?.eligibility}</p>
+                            <p className='mt-3 '><span className="font-semibold">Description:</span> {job?.jobDescription}</p>
+                          </div>
+                        </div>
+                      ))
+                      :
+                      <p>No jobs added.</p>
+                  }
+                </div>
+              </>
+            }
+
+            {
+              applicants &&
+              <div className='my-5'>
+
+                <div class="overflow-x-auto rounded-lg shadow-lg">
+                  <table class="min-w-full">
+                    <thead class="bg-gray-800">
+                      <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          S.No
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Job Title
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Full Name
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Email
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Qualification
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Resume
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Status
+                        </th>
+
+                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                          Approve/Reject
+                        </th>
+                        <th scope="col" class="relative px-6 py-3">
+                          <span class="sr-only">Edit</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody class="bg-white ">
+                      <tr class="bg-white ">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          1
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          Nail Artist
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          Adithya Bijimon
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          adithya@gmail.com
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          BCA
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          resume.pdf
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            pending
+                          </span>
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center space-x-2">
+                          <button class="px-3 py-1 text-sm font-semibold rounded-md text-white bg-green-600 hover:bg-green-700 transition duration-150">
+                            Approve
+                          </button>
+                          <button class="px-3 py-1 text-sm font-semibold rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-150">
+                            Reject
+                          </button>
+                        </td>
+
+
+                      </tr>
 
 
 
 
 
+                    </tbody>
+                  </table>
+                </div>
 
-            </div>
+
+              </div>
+            }
 
           </div>
         </div>

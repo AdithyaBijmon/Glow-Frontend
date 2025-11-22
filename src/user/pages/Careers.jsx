@@ -4,7 +4,7 @@ import Footer from '../../components/Footer'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowUpRightFromSquare, faMultiply, faSearch } from '@fortawesome/free-solid-svg-icons'
-import { getAllJobsAPI, getAllUserJobsAPI } from '../../services/allAPI'
+import { addJobApplicationAPI, getAllJobsAPI, getAllUserJobsAPI } from '../../services/allAPI'
 import { ToastContainer, toast } from 'react-toastify'
 
 const Careers = () => {
@@ -12,12 +12,14 @@ const Careers = () => {
     const [searchKey, setSearchKey] = useState("")
     const [userToken, setUserToken] = useState("")
     const [modalStatus, setModalStatus] = useState(false)
-    const [applicationDetails,setApplicationDetails] = useState({fullName:"",email:"",qualification:"",phone:"",resume:"",jobTitle:"",jobId:""})
-    const [jobID,setJobID] = useState("")
-    const [ jobtitle,setJobtitle] = useState("")
+    const [applicationDetails, setApplicationDetails] = useState({ fullName: "", email: "", qualification: "", phone: "", resume: "" })
+    const [jobID, setJobID] = useState("")
+    const [jobtitle, setJobtitle] = useState("")
     // console.log(searchKey);
 
-    console.log(allJobs);
+    // console.log(allJobs);
+    console.log(applicationDetails);
+    
 
     useEffect(() => {
         const token = JSON.parse(sessionStorage.getItem("token"))
@@ -47,21 +49,61 @@ const Careers = () => {
         }
     }
 
-    const handleJobApplication = (job) =>{
+    const handleJobApplication = (job) => {
         setModalStatus(true)
         setJobID(job._id)
         setJobtitle(job.jobTitle)
     }
 
-    const addApplication = async () =>{
-      const {fullName,email,qualification,phone,resume,jobTitle,jobId} = applicationDetails
+    
 
-      if(!fullName || !email || !qualification || !phone || !resume || !jobTitle || !jobId){
-        toast.info("Please fill the form completely.")
-      }
-      else{
-        
-      }
+    const handleAddApplication = async () => {
+        const token = JSON.parse(sessionStorage.getItem("token"))
+        const reqHeader = {
+            "Authorization": `Bearer ${token}`
+        }
+
+        const reqBody = new FormData()
+
+        for (let key in applicationDetails) {
+            reqBody.append(key, applicationDetails[key])
+        }
+
+        reqBody.append("jobId",jobID)
+        reqBody.append("jobTitle",jobtitle)
+
+        const { fullName, email, qualification, phone, resume } = applicationDetails
+
+        if (!fullName || !email || !qualification || !phone || !resume ) {
+            toast.info("Please fill the form completely.")
+        }
+        else {
+            try {
+                const result = await addJobApplicationAPI(reqBody, reqHeader)
+                if (result.status == 200) {
+                    toast.success("Job Application send successfully,wait for Admin's approval")
+                    handleReset()
+                    setModalStatus(false)
+                }
+                else if(result.status==409){
+                    toast.warning(result.response.data)
+                    handleReset()
+                }
+                else{
+                    toast.error("Something went wrong")
+                    handleReset()
+                }
+
+            } catch (error) {
+                console.log(error);
+
+            }
+
+        }
+    }
+
+    const handleReset = ()=>{
+        setApplicationDetails({fullName: "", email: "", qualification: "", phone: "", resume: "" })
     }
 
     return (
@@ -139,36 +181,24 @@ const Careers = () => {
                         </div>
 
                         <div className='my-4'>
+                            
                             <div className='flex mb-3'>
-                                <input value={jobID}  type="text" className='p-2 w-full  border border-gray-400 bg-gray-200' readOnly  />
-                                <input value={jobtitle}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2 bg-gray-200' readOnly />
+                                <input value={applicationDetails.fullName} onChange={(e) => setApplicationDetails({ ...applicationDetails, fullName: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400' placeholder='Full Name' />
+                                <input value={applicationDetails.email} onChange={(e) => setApplicationDetails({ ...applicationDetails, email: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Email ID' />
                             </div>
                             <div className='flex mb-3'>
-                                <input value={applicationDetails.fullName} onChange={(e)=>setApplicationDetails({...applicationDetails,fullName:e.target.value})} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400' placeholder='Full Name' />
-                                <input value={applicationDetails.email} onChange={(e)=>setApplicationDetails({...applicationDetails,email:e.target.value})}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Email ID' />
-                            </div>
-                            <div className='flex mb-3'>
-                                <input value={applicationDetails.qualification} onChange={(e)=>setApplicationDetails({...applicationDetails,qualification:e.target.value})}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Qualification' />
-                                <input value={applicationDetails.phone} onChange={(e)=>setApplicationDetails({...applicationDetails,phone:e.target.value})}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Phone Number ' />
+                                <input value={applicationDetails.qualification} onChange={(e) => setApplicationDetails({ ...applicationDetails, qualification: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Qualification' />
+                                <input value={applicationDetails.phone} onChange={(e) => setApplicationDetails({ ...applicationDetails, phone: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Phone Number ' />
                             </div>
                             <label className='' htmlFor="resume-pdf"><span className='bg-gray-300 p-1'>Add</span> Resume</label>
-                            <input  type="file" id='resume-pdf' className='p-2 w-full hidden' />
-                            {/* {
-                                preview &&
-                                <div className='flex justify-center'>
-                                    <label htmlFor='service-image'>
-                                        <img style={{ width: '100px', height: '100px' }} className='object-cover' src={preview} alt="" />
-                                        <input  type="file" id='service-image' className='p-2 w-full hidden' />
-                                    </label>
-
-                                </div>
-                            } */}
+                            <input onChange={(e)=> setApplicationDetails({...applicationDetails,resume:e.target.files[0]})} type="file" id='resume-pdf' className='p-2 w-full ' />
+                           
 
                         </div>
 
                         <div className='flex justify-between my-3'>
-                            <button  className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
-                            <button  className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>ADD</button>
+                            <button onClick={handleReset} className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
+                            <button onClick={handleAddApplication} className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>ADD</button>
 
                         </div>
 
