@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
-import { loginAPI, registerAPI } from '../services/allAPI';
+import { googleLoginAPI, loginAPI, registerAPI } from '../services/allAPI';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 
 const Auth = ({ register }) => {
 
@@ -55,10 +57,10 @@ const Auth = ({ register }) => {
           sessionStorage.setItem("token", JSON.stringify(result.data.token))
 
           setTimeout(() => {
-            if(result.data.user.role=='user'){
+            if (result.data.user.role == 'user') {
               navigate('/')
             }
-            else{
+            else {
               navigate('/admin-dashboard')
             }
           }, 3000);
@@ -83,6 +85,51 @@ const Auth = ({ register }) => {
         console.log(err)
       }
     }
+  }
+
+  const handleGoogleLogin = async (credentialResponse) => {
+
+    const credential = credentialResponse.credential
+    const details = jwtDecode(credential)
+    console.log(details);
+    
+
+    try {
+      const result = await googleLoginAPI({username:details.name,email:details.email,password:'googlePassword',profile:details.picture})
+      if (result.status == 200) {
+        toast.success("Login successful")
+        sessionStorage.setItem("user", JSON.stringify(result.data.user))
+        sessionStorage.setItem("token", JSON.stringify(result.data.token))
+
+        setTimeout(() => {
+          if (result.data.user.role == 'user') {
+            navigate('/')
+          }
+          else {
+            navigate('/admin-dashboard')
+          }
+        }, 3000);
+      }
+
+      else if (result.status == 401) {
+        toast.warning("Invalid email or password")
+        setUserDetails({ email: "", password: "" })
+      }
+      else if (result.status == 404) {
+        toast.warning("Account does not exist.")
+        setUserDetails({ email: "", password: "" })
+      }
+      else {
+        toast.warning("Something went wrong")
+        setUserDetails({ email: "", password: "" })
+      }
+
+
+    }
+    catch (err) {
+      console.log(err)
+    }
+
   }
 
   return (
@@ -112,6 +159,27 @@ const Auth = ({ register }) => {
           <input value={userDetails.email} onChange={(e) => setUserDetails({ ...userDetails, email: e.target.value })} type="email" className='border border-gray-300 placeholder-gray-400 p-2 my-5 w-full' placeholder='Email' />
 
           <input value={userDetails.password} onChange={(e) => setUserDetails({ ...userDetails, password: e.target.value })} type="password" className='border border-gray-300 placeholder-gray-400 p-2 w-full' placeholder='Password' />
+
+          {!register &&
+
+            <div className='text-center my-5'>-------------- or --------------</div>
+
+          }
+
+          {!register &&
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                console.log(credentialResponse);
+                handleGoogleLogin(credentialResponse)
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+
+
+            />
+          }
+
 
           {
             register ?

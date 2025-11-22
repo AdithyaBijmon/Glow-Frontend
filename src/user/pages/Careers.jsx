@@ -3,14 +3,18 @@ import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowUpRightFromSquare, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faArrowUpRightFromSquare, faMultiply, faSearch } from '@fortawesome/free-solid-svg-icons'
 import { getAllJobsAPI, getAllUserJobsAPI } from '../../services/allAPI'
-import { toast } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 
 const Careers = () => {
     const [allJobs, setAllJobs] = useState([])
     const [searchKey, setSearchKey] = useState("")
     const [userToken, setUserToken] = useState("")
+    const [modalStatus, setModalStatus] = useState(false)
+    const [applicationDetails,setApplicationDetails] = useState({fullName:"",email:"",qualification:"",phone:"",resume:"",jobTitle:"",jobId:""})
+    const [jobID,setJobID] = useState("")
+    const [ jobtitle,setJobtitle] = useState("")
     // console.log(searchKey);
 
     console.log(allJobs);
@@ -42,6 +46,24 @@ const Careers = () => {
             console.log(err)
         }
     }
+
+    const handleJobApplication = (job) =>{
+        setModalStatus(true)
+        setJobID(job._id)
+        setJobtitle(job.jobTitle)
+    }
+
+    const addApplication = async () =>{
+      const {fullName,email,qualification,phone,resume,jobTitle,jobId} = applicationDetails
+
+      if(!fullName || !email || !qualification || !phone || !resume || !jobTitle || !jobId){
+        toast.info("Please fill the form completely.")
+      }
+      else{
+        
+      }
+    }
+
     return (
         <>
             <Header />
@@ -76,7 +98,7 @@ const Careers = () => {
                                         <div key={job?._id} className='p-5 shadow w-full'>
                                             <div className='flex justify-between items-center my-3'>
                                                 <h1 className='text-2xl font-bold'>{job?.jobTitle}</h1>
-                                                <Link to={'/careers'}><button className='bg-yellow-500 px-4 py-2 text-black font-bold cursor-pointer hover:bg-yellow-400'>Apply <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></button></Link>
+                                                <Link to={'/careers'}><button onClick={() => handleJobApplication(job)} className='bg-yellow-500 px-4 py-2 text-black font-bold cursor-pointer hover:bg-yellow-400'>Apply <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></button></Link>
                                             </div>
                                             <p>Description : {job?.jobDescription}</p>
                                             <p>Job Type : {job?.jobType}</p>
@@ -105,6 +127,72 @@ const Careers = () => {
             }
 
             <Footer />
+
+            {
+                modalStatus &&
+                <div className='bg-black/75 w-full h-full fixed z-51 inset-0 flex items-center justify-center'>
+
+                    <div className="w-100 h-85 p-5 bg-white">
+                        <div className='flex justify-between items-center'>
+                            <h1 className='text-xl font-bold'>Job Application</h1>
+                            <button onClick={() => setModalStatus(false)} className='cursor-pointer'><FontAwesomeIcon icon={faMultiply} className='text-xl' /></button>
+                        </div>
+
+                        <div className='my-4'>
+                            <div className='flex mb-3'>
+                                <input value={jobID}  type="text" className='p-2 w-full  border border-gray-400 bg-gray-200' readOnly  />
+                                <input value={jobtitle}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2 bg-gray-200' readOnly />
+                            </div>
+                            <div className='flex mb-3'>
+                                <input value={applicationDetails.fullName} onChange={(e)=>setApplicationDetails({...applicationDetails,fullName:e.target.value})} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400' placeholder='Full Name' />
+                                <input value={applicationDetails.email} onChange={(e)=>setApplicationDetails({...applicationDetails,email:e.target.value})}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Email ID' />
+                            </div>
+                            <div className='flex mb-3'>
+                                <input value={applicationDetails.qualification} onChange={(e)=>setApplicationDetails({...applicationDetails,qualification:e.target.value})}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Qualification' />
+                                <input value={applicationDetails.phone} onChange={(e)=>setApplicationDetails({...applicationDetails,phone:e.target.value})}  type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Phone Number ' />
+                            </div>
+                            <label className='' htmlFor="resume-pdf"><span className='bg-gray-300 p-1'>Add</span> Resume</label>
+                            <input  type="file" id='resume-pdf' className='p-2 w-full hidden' />
+                            {/* {
+                                preview &&
+                                <div className='flex justify-center'>
+                                    <label htmlFor='service-image'>
+                                        <img style={{ width: '100px', height: '100px' }} className='object-cover' src={preview} alt="" />
+                                        <input  type="file" id='service-image' className='p-2 w-full hidden' />
+                                    </label>
+
+                                </div>
+                            } */}
+
+                        </div>
+
+                        <div className='flex justify-between my-3'>
+                            <button  className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
+                            <button  className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>ADD</button>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                </div>
+            }
+
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+
+            />
         </>
     )
 }

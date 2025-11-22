@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMultiply, faPen } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faEyeSlash, faMultiply, faPen } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
 
 const Profile = () => {
@@ -10,6 +10,7 @@ const Profile = () => {
     const [history, setHistory] = useState(false)
     const [userDetails, setUserDetails] = useState({})
     const [offCanvasStatus, setOffCanvasStatus] = useState(false)
+    const [viewPasswordStatus, setViewPasswordStatus] = useState(false)
 
     useEffect(() => {
         const token = JSON.parse(sessionStorage.getItem("token"))
@@ -23,7 +24,7 @@ const Profile = () => {
         <>
             <Header navblack />
             <div className='md:mx-20 mx-10 md:flex justify-between my-20 px-20  items-center bg-yellow-500/50 p-5'>
-                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="" />
+                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={userDetails.profile} alt="" />
 
                 <div className='flex flex-col justify-center'>
                     <h1 className='md:text-3xl text-2xl font-bold '>{userDetails.username}</h1>
@@ -132,23 +133,31 @@ const Profile = () => {
 
                         <div className='flex justify-center my-5'>
                             <label htmlFor='profile-img'>
-                                <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="" />
-                                <FontAwesomeIcon  className='absolute top-20 md:right-20 right-40 bg-yellow-500 p-2 rounded-full text-sm' icon={faPen}/>
-                                <input type="file"  className='hidden' id='profile-img' />
+                                <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={userDetails.profile} alt="" />
+                                <FontAwesomeIcon className='absolute top-20 md:right-20 right-40 bg-yellow-500 p-2 rounded-full text-sm' icon={faPen} />
+                                <input type="file" className='hidden' id='profile-img' />
                             </label>
                         </div>
 
                         <div className='mx-5'>
-                            <input value={userDetails.username} onChange={(e)=>setUserDetails({...userDetails,username:e.target.value})} type="text" className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Username' />
+                            <input value={userDetails.username} onChange={(e) => setUserDetails({ ...userDetails, username: e.target.value })} type="text" className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Username' />
                             <input value={userDetails.email} type="email" className='w-full my-3 border border-gray-400 p-1 bg-gray-200' readOnly />
-                            <input value={userDetails.password} onChange={(e)=>setUserDetails({...userDetails,password:e.target.value})} type="text" className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Password' />
-                            <input value={userDetails.password} type="password" className='w-full my-3 placeholder-gray-400 border border-gray-400 p-1' placeholder='Confirm Password' />
-
+                            <div className='flex items-center'>
+                                <input value={userDetails.password} onChange={(e) => setUserDetails({ ...userDetails, password: e.target.value })} type={viewPasswordStatus ? "text" : "password"} className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Password' />
+                                <button onClick={() => setViewPasswordStatus(!viewPasswordStatus)}>
+                                    {
+                                        viewPasswordStatus?<FontAwesomeIcon style={{ marginLeft: '-30px' }} icon={faEye} />
+                                        :
+                                        <FontAwesomeIcon style={{ marginLeft: '-30px' }} icon={faEyeSlash} />
+                                    }
+                                </button>
+                               
+                            </div>
                             <div className='flex justify-between my-3'>
-                            <button  className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
-                            <button  className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>UPDATE</button>
+                                <button className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
+                                <button className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>UPDATE</button>
 
-                        </div>
+                            </div>
                         </div>
                     </div>
 

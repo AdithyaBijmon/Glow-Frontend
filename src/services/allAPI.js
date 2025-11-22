@@ -13,6 +13,10 @@ export const loginAPI = async (reqBody)=>{
   return await commonAPI("POST",`${SERVERURL}/login`,reqBody)
 }
 
+// ---------user google login -------------
+export const googleLoginAPI = async (reqBody)=>{
+  return await commonAPI("POST",`${SERVERURL}/google-login`,reqBody)
+}
 // --------- ADMIN---------------------------
 
 // --------Add Service------------
@@ -57,4 +61,9 @@ export const getHomeServicesAPI = async ()=>{
 
 export const getAllUserJobsAPI = async (search,reqHeader)=>{
   return await commonAPI("GET",`${SERVERURL}/all/user/jobs?search=${search}`,{},reqHeader)
+}
+
+// ---------- Add job Application -------------
+export const addJobApplicationAPI = async (reqBody,reqHeader)=>{
+  return await commonAPI("POST",`${SERVERURL}/add-application`,reqBody,reqHeader)
 }
