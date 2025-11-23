@@ -25,9 +25,12 @@ export const addServiceAPI = async (reqBody,reqHeader)=>{
 }
 
 // --------- All services----------
-export const getAllServicesAPI = async (search)=>{
-  return await commonAPI("GET",`${SERVERURL}/all-services?search=${search}`,{})
+export const getAllAdminServicesAPI = async ()=>{
+  return await commonAPI("GET",`${SERVERURL}/admin-all-services`,{})
 }
+
+
+
 
 // -------- Delete Service ------------
 export const removeServiceAPI = async (id,reqHeader)=>{
@@ -54,11 +57,33 @@ export const editAdminDetailsAPI = async (reqBody,reqHeader)=>{
   return await commonAPI("PUT",`${SERVERURL}/edit/admin`,reqBody,reqHeader)
 }
 
+// ---------- All job applications ---------------
+
+export const getAllAdminApplicantsAPI = async (reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/all-applications`,{},reqHeader)
+}
+// ------- Approve application -----------
+export const approveApplicationAPI = async (id,reqHeader)=>{
+  return await commonAPI("PUT",`${SERVERURL}/approve/${id}/application`,{},reqHeader)
+}
+
+// ------- Reject application -----------
+export const rejectApplicationAPI = async (id,reqHeader)=>{
+  return await commonAPI("PUT",`${SERVERURL}/reject/${id}/application`,{},reqHeader)
+}
+
 // ------------ USER --------------------
+// -------- Home page services -------------
 export const getHomeServicesAPI = async ()=>{
   return await commonAPI("GET",`${SERVERURL}/home-services`,{})
 }
 
+// --------- All services----------
+export const getAllServicesAPI = async (search)=>{
+  return await commonAPI("GET",`${SERVERURL}/all-services?search=${search}`,{})
+}
+
+// ------------ All User jobs-------------
 export const getAllUserJobsAPI = async (search,reqHeader)=>{
   return await commonAPI("GET",`${SERVERURL}/all/user/jobs?search=${search}`,{},reqHeader)
 }
@@ -67,3 +92,9 @@ export const getAllUserJobsAPI = async (search,reqHeader)=>{
 export const addJobApplicationAPI = async (reqBody,reqHeader)=>{
   return await commonAPI("POST",`${SERVERURL}/add-application`,reqBody,reqHeader)
 }
+
+// ---------- View Single service -------------
+export const viewSingleServiceAPI = async (id,reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/view/${id}/service`,{},reqHeader)
+}
+

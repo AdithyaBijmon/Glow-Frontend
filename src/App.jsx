@@ -13,6 +13,7 @@ import AdminSettings from './admin/pages/AdminSettings'
 import AdminCareers from './admin/pages/AdminCareers'
 import AdminServies from './admin/pages/AdminServies'
 import Careers from './user/pages/Careers'
+import ViewService from './user/pages/ViewService'
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path='/register' element={<Auth register/>}/>
         <Route path='/profile' element={<Profile/>}/>
         <Route path='/careers' element={<Careers/>}/>
+        <Route path='/view/:id/service' element={<ViewService/>}/>
         <Route path='/*' element={<Pnf/>}/>
 
         {/* admin */}

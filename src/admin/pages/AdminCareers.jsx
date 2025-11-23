@@ -5,7 +5,10 @@ import AdminSidebar from '../components/AdminSidebar'
 import { ToastContainer, toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMultiply, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { addJobAPI, getAllJobsAPI, removeJobAPI } from '../../services/allAPI'
+import { addJobAPI, approveApplicationAPI, getAllAdminApplicantsAPI, getAllJobsAPI, rejectApplicationAPI, removeJobAPI } from '../../services/allAPI'
+import { Link } from 'react-router-dom'
+import SERVERURL from '../../services/ServerURL'
+import 'react-toastify/dist/ReactToastify.css'
 
 
 const AdminCareers = () => {
@@ -15,13 +18,40 @@ const AdminCareers = () => {
   console.log(jobs);
   const [jobSection, setJobSection] = useState(true)
   const [applicants, setApplicants] = useState(false)
+  const [allApplicants, setAllApplicants] = useState([])
+
+  const confirmAction = (id, action) => {
+    action();
+    toast.dismiss(id);
+  };
+
+  const ApproveConfirmationToast = ({ closeToast, action }) => (
+    <div>
+      <p>Are you sure to approve this application?</p>
+      <button onClick={() => confirmAction(closeToast.toastId, action)}>Yes</button>
+      <button className='ms-5' onClick={() => toast.dismiss(closeToast.toastId)}>No</button>
+    </div>
+  )
+
+  const RejectConfirmationToast = ({ closeToast, action }) => (
+    <div>
+      <p>Are you sure to reject this application?</p>
+      <button onClick={() => confirmAction(closeToast.toastId, action)}>Yes</button>
+      <button className='ms-5' onClick={() => toast.dismiss(closeToast.toastId)}>No</button>
+    </div>
+  )
 
 
   useEffect(() => {
     getAllJobs()
-  }, [jobs])
+    if (applicants == true) {
+      getAllApplicants()
+    }
+  }, [jobs, applicants])
 
   // console.log(allJobs)
+  console.log(allApplicants);
+
 
   const getAllJobs = async () => {
     const token = JSON.parse(sessionStorage.getItem("token"))
@@ -42,6 +72,28 @@ const AdminCareers = () => {
     }
     catch (err) {
       console.log(err);
+
+    }
+  }
+
+  const getAllApplicants = async () => {
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+    try {
+      const result = await getAllAdminApplicantsAPI(reqHeader)
+
+      if (result.status == 200) {
+        setAllApplicants(result.data)
+        
+      }
+      else {
+        console.log(result.response.data)
+      }
+
+    } catch (error) {
+      console.log(error);
 
     }
   }
@@ -115,6 +167,59 @@ const AdminCareers = () => {
     }
   }
 
+  const handleApproveApplication = async (id) => {
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+
+    try {
+      const result = await approveApplicationAPI(id, reqHeader)
+      if (result.status == 200) {
+        toast.success("Application approved.")
+        getAllApplicants()
+      }
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  
+  const handleRejectApplication = async (id) => {
+    const token = JSON.parse(sessionStorage.getItem("token"))
+    const reqHeader = {
+      "Authorization": `Bearer ${token}`
+    }
+
+    try {
+      const result = await rejectApplicationAPI(id, reqHeader)
+      if (result.status == 200) {
+        toast.success("Application rejected.")
+        getAllApplicants()
+      }
+
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  const showApproveConfirmation = (id) => {
+    toast.info(<ApproveConfirmationToast action={()=>handleApproveApplication(id)} />, {
+      closeButton: false,
+      autoClose: false
+    });
+  }
+
+   const showRejectConfirmation = (id) => {
+    toast.info(<RejectConfirmationToast action={()=>handleRejectApplication(id)} />, {
+      closeButton: false,
+      autoClose: false
+    });
+  }
+
 
 
   return (
@@ -169,77 +274,110 @@ const AdminCareers = () => {
               applicants &&
               <div className='my-5'>
 
-                <div class="overflow-x-auto rounded-lg shadow-lg">
-                  <table class="min-w-full">
-                    <thead class="bg-gray-800">
+                <div className="overflow-x-auto rounded-lg shadow-lg">
+                  <table className="min-w-full">
+                    <thead className="bg-gray-800">
                       <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           S.No
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Job Title
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Full Name
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Email
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Qualification
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Resume
                         </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Status
                         </th>
 
-                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                           Approve/Reject
                         </th>
-                        <th scope="col" class="relative px-6 py-3">
-                          <span class="sr-only">Edit</span>
+                        <th scope="col" className="relative px-6 py-3">
+                          <span className="sr-only">Edit</span>
                         </th>
                       </tr>
                     </thead>
-                    <tbody class="bg-white ">
-                      <tr class="bg-white ">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          1
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          Nail Artist
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          Adithya Bijimon
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          adithya@gmail.com
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          BCA
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          resume.pdf
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                            pending
-                          </span>
-                        </td>
+                    <tbody className="bg-white ">
+                      {
+                        allApplicants.length > 0 ?
+                          allApplicants?.map((applicant, index) => (
+                            <tr key={applicant?._id} className="bg-white ">
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {index + 1}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {applicant?.jobTitle}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {applicant?.fullName}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {applicant?.email}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {applicant?.qualification}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <Link to={`${SERVERURL}/pdf/${applicant?.resume}`} target='_blank' className='text-blue-500'>Resume</Link>
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                {
+                                  applicant?.status == "pending" ?
+                                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                      pending
+                                    </span>
+                                    :
+                                    applicant?.status == "approved" ?
+                                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Approved
+                                      </span>
+                                      :
+                                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        Rejected
+                                      </span>
+                                }
+                              </td>
 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center space-x-2">
-                          <button class="px-3 py-1 text-sm font-semibold rounded-md text-white bg-green-600 hover:bg-green-700 transition duration-150">
-                            Approve
-                          </button>
-                          <button class="px-3 py-1 text-sm font-semibold rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-150">
-                            Reject
-                          </button>
-                        </td>
+                              {
+                                applicant?.status == "pending" ?
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center space-x-2">
+                                    <button onClick={()=>showApproveConfirmation(applicant?._id)} className="px-3 py-1 text-sm font-semibold rounded-md text-white bg-green-600 hover:bg-green-700 transition duration-150">
+                                      Approve
+                                    </button>
+                                    <button onClick={()=>showRejectConfirmation(applicant?._id)} className="px-3 py-1 text-sm font-semibold rounded-md text-white bg-red-600 hover:bg-red-700 transition duration-150">
+                                      Reject
+                                    </button>
+                                  </td>
+                                  :
+                                  applicant?.status == "approved" ?
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-900">
+                                      APPROVED
+                                    </td>
+                                    :
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-900">
+                                      REJECTED
+                                    </td>
+                              }
 
 
-                      </tr>
+                            </tr>
+                          ))
+                          :
+                          <tr>
+                            <td>No applicants.</td>
+                          </tr>
+                      }
 
 
 

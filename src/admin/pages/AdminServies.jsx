@@ -4,16 +4,16 @@ import Footer from '../../components/Footer'
 import AdminSidebar from '../components/AdminSidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCross, faL, faMultiply, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { addServiceAPI, getAllServicesAPI, removeServiceAPI } from '../../services/allAPI'
+import { addServiceAPI, getAllAdminServicesAPI, getAllServicesAPI, removeServiceAPI } from '../../services/allAPI'
 import SERVERURL from '../../services/ServerURL'
 import { ToastContainer, toast } from 'react-toastify'
 
 const AdminServies = () => {
     const [modalStatus, setModalStatus] = useState(false)
     const [allServices, setAllServices] = useState([])
-    const [services, setServices] = useState({ serviceName: "", description: "", category: "", price: "", serviceImg: "" })
+    const [services, setServices] = useState({ serviceName: "", description: "", category: "", price: "", serviceImg: "", duration: "" })
     const [preview, setPreview] = useState("")
-    // console.log(services)
+    console.log(services)
 
     useEffect(() => {
         getAllServices()
@@ -32,8 +32,8 @@ const AdminServies = () => {
             "Authorization": `Bearer ${token}`
         }
 
-        const { serviceName, description, category, price, serviceImg } = services
-        if (!serviceName || !description || !category || !price || !serviceImg) {
+        const { serviceName, description, category, price, serviceImg, duration } = services
+        if (!serviceName || !description || !category || !price || !serviceImg || !duration) {
             toast.info("Fill the form completely.")
         }
         else {
@@ -77,12 +77,14 @@ const AdminServies = () => {
     }
 
     const getAllServices = async () => {
-        
+
 
         try {
-            const result = await getAllServicesAPI()
+            const result = await getAllAdminServicesAPI()
             // console.log(result)
+           if(result.status == 200){
             setAllServices(result.data)
+           }
 
         }
         catch (err) {
@@ -178,12 +180,18 @@ const AdminServies = () => {
                         </div>
 
                         <div className='my-4'>
-                            <input value={services.serviceName} onChange={(e) => setServices({ ...services, serviceName: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400' placeholder='Service name' />
-                            <input value={services.description} onChange={(e) => setServices({ ...services, description: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 my-3' placeholder='Description' />
+                            <input value={services.serviceName} onChange={(e) => setServices({ ...services, serviceName: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 mb-3' placeholder='Service name' />
+                            <div className='flex mb-3'>
+                                <input value={services.description} onChange={(e) => setServices({ ...services, description: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Description' />
+                                <input value={services.duration} onChange={(e) => setServices({ ...services, duration: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Duration ' />
+                            </div>
+
                             <div className='flex mb-3'>
                                 <input value={services.category} onChange={(e) => setServices({ ...services, category: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ' placeholder='Category eg:Skin,nails' />
                                 <input value={services.price} onChange={(e) => setServices({ ...services, price: e.target.value })} type="text" className='p-2 w-full placeholder:text-gray-400 border border-gray-400 ms-2' placeholder='Price ' />
                             </div>
+
+
                             <label className={preview && 'hidden'} htmlFor="service-image"><span className='bg-gray-300 p-1'>Add</span> picture of the service.</label>
                             <input onChange={(e) => handleUploadServiceImage(e)} type="file" id='service-image' className='p-2 w-full hidden' />
                             {

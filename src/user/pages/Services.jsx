@@ -72,8 +72,10 @@ const Services = () => {
                   allServices.length > 0 ?
                     allServices?.map(service => (
                       <div key={service?._id} className="shadow w-full p-3">
-                        <img className='w-full h-80 object-cover' src={`${SERVERURL}/uploads/${service?.serviceImg}`} alt="" />
-                        <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold'>{service?.serviceName}</h3>
+                        <Link to={`/view/${service?._id}/service`}>
+                          <img className='w-full h-80 object-cover' src={`${SERVERURL}/uploads/${service?.serviceImg}`} alt="" />
+                          <h3 className='text-center text-xl text-yellow-500 mt-3 font-bold'>{service?.serviceName}</h3>
+                        </Link>
                       </div>
                     ))
                     :

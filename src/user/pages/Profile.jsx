@@ -24,7 +24,7 @@ const Profile = () => {
         <>
             <Header navblack />
             <div className='md:mx-20 mx-10 md:flex justify-between my-20 px-20  items-center bg-yellow-500/50 p-5'>
-                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={userDetails.profile} alt="" />
+                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={userDetails.profile==""?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":userDetails.profile} alt="" />
 
                 <div className='flex flex-col justify-center'>
                     <h1 className='md:text-3xl text-2xl font-bold '>{userDetails.username}</h1>

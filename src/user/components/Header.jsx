@@ -70,7 +70,7 @@ const Header = ({ navblack }) => {
               <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li></Link>
               :
               <div className='relative flex items-center justify-center'>
-                <button className='cursor-pointer' onClick={() => setUserMenu(!userMenu)}><img src={user.profile} style={{ width: '40px', height: '40px', borderRadius: '50%' }} alt="user" /></button>
+                <button className='cursor-pointer' onClick={() => setUserMenu(!userMenu)}><img src={user.profile==""?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":user.profile} style={{ width: '40px', height: '40px', borderRadius: '50%' }} alt="user" /></button>
 
                 {
                   userMenu &&
