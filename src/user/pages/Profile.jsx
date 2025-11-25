@@ -1,30 +1,161 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faMultiply, faPen } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
+import { editUserDetailsAPI, removeAppointmentAPI, viewUserAppliedJobsAPI, viewUserAppointmentAPI } from '../../services/allAPI'
+import SERVERURL from '../../services/ServerURL'
+import { ToastContainer, toast } from 'react-toastify'
+import { UserUpdateContext } from '../../contextAPI/ShareContext'
 
 const Profile = () => {
 
     const [appoint, setAppoint] = useState(true)
-    const [history, setHistory] = useState(false)
-    const [userDetails, setUserDetails] = useState({})
+    const [appliedJobs, setAppliedJobs] = useState(false)
+    const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "", profile: "" })
+    const [existingProfilePic, setExistingProfilePic] = useState("")
     const [offCanvasStatus, setOffCanvasStatus] = useState(false)
     const [viewPasswordStatus, setViewPasswordStatus] = useState(false)
+    const [userAppointments, setUserAppointments] = useState([])
+    const [preview, setPreview] = useState("")
+    const { userEditResponse, setUserEditResponse } = useContext(UserUpdateContext)
+    const [allJobs,setAllJobs] = useState([])
+    // console.log(userAppointments);
+
+
 
     useEffect(() => {
         const token = JSON.parse(sessionStorage.getItem("token"))
         if (token) {
             const user = JSON.parse(sessionStorage.getItem("user"))
-            setUserDetails(user)
+            setUserDetails({ username: user.username, email: user.email, password: user.password, profile: "" })
+            setExistingProfilePic(user.profile)
+            if (appoint) {
+                getUserAppointments()
+            }
+            if(appliedJobs){
+                getUserAppliedJobs()
+            }
         }
     }, [])
+
+    const getUserAppointments = async () => {
+        const token = JSON.parse(sessionStorage.getItem("token"))
+        const reqHeader = {
+            "Authorization": `Bearer ${token}`
+        }
+
+        try {
+            const result = await viewUserAppointmentAPI(reqHeader)
+            if (result.status == 200) {
+                setUserAppointments(result.data)
+            }
+
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+    const getUserAppliedJobs = async () => {
+        const token = JSON.parse(sessionStorage.getItem("token"))
+        const reqHeader = {
+            "Authorization": `Bearer ${token}`
+        }
+
+        try {
+            const result = await viewUserAppliedJobsAPI(reqHeader)
+            if(result.status==200){
+                setAllJobs(result.data)
+            }
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
+
+    const handleUploadImage = (e) => {
+        const image = e.target.files[0]
+        setUserDetails({ ...userDetails, profile: image })
+        setPreview(URL.createObjectURL(image))
+    }
+
+
+    const handleDelete = async (id) => {
+        const isConfirmed = window.confirm("Are you sure you want to cancel the appointment?")
+        if (isConfirmed) {
+            const token = JSON.parse(sessionStorage.getItem("token"))
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+
+            try {
+                const result = await removeAppointmentAPI(id, reqHeader)
+                if (result.status == 200) {
+                    getUserAppointments()
+                }
+
+            } catch (error) {
+                console.log(error);
+
+            }
+        }
+
+    }
+
+    const handleEditUser = async () => {
+        const { username, password, profile } = userDetails
+        const token = JSON.parse(sessionStorage.getItem("token"))
+        const reqHeader = {
+            "Authorization": `Bearer ${token}`
+        }
+
+        const reqBody = new FormData()
+
+        reqBody.append("username", username)
+        reqBody.append("password", password)
+        preview ? reqBody.append("profile", profile) : reqBody.append("profile", existingProfilePic)
+
+
+
+        try {
+            const result = await editUserDetailsAPI(reqBody, reqHeader)
+            if (result.status == 200) {
+                sessionStorage.setItem("user", JSON.stringify(result.data))
+                toast.success("User Details updated.")
+                setUserEditResponse(result.data)
+                const updatedUser = result.data
+                setUserDetails({ username: updatedUser.username, email: updatedUser.email, password: updatedUser.password })
+                setExistingProfilePic(updatedUser.profile)
+
+
+                setOffCanvasStatus(false)
+
+            }
+
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+
+
     return (
 
         <>
             <Header navblack />
             <div className='md:mx-20 mx-10 md:flex justify-between my-20 px-20  items-center bg-yellow-500/50 p-5'>
-                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={userDetails.profile==""?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":userDetails.profile} alt="" />
+                {/* <img  src={userDetails.profile == "" ? "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" /> */}
+
+                {
+                    existingProfilePic ?
+                        <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={preview ? preview : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" />
+                        :
+                        <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={preview ? preview : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"} alt="" />
+                }
 
                 <div className='flex flex-col justify-center'>
                     <h1 className='md:text-3xl text-2xl font-bold '>{userDetails.username}</h1>
@@ -38,12 +169,11 @@ const Profile = () => {
             <div className='md:flex justify-between items-center w-full px-20'>
                 {/* Centered Group */}
                 <div className='flex justify-center flex-grow itemx-center'>
-                    <button onClick={() => { setAppoint(true); setHistory(false) }} className={appoint ? 'border-b-5 cursor-pointer' : 'text-sm cursor-pointer'}>Appointments</button>
-                    <button onClick={() => { setAppoint(false); setHistory(true) }} className={history ? 'border-b-5 ms-5 cursor-pointer' : 'ms-5 text-sm cursor-pointer'}>Appointment History</button>
+                    <button onClick={() => { setAppoint(true); setAppliedJobs(false) }} className={appoint ? 'border-b-5 cursor-pointer' : 'text-sm cursor-pointer'}>Appointments</button>
+                    <button onClick={() => { setAppoint(false); setAppliedJobs(true) }} className={appliedJobs ? 'border-b-5 ms-5 cursor-pointer' : 'ms-5 text-sm cursor-pointer'}>Applied Jobs</button>
                 </div>
 
-                {/* Right-aligned Button */}
-                <button className='px-3 py-2 bg-yellow-500 text-black font-bold hover:bg-yellow-400 md:my-0 my-5 '>Book an Appointment</button>
+
             </div>
 
 
@@ -52,41 +182,55 @@ const Profile = () => {
             {
                 appoint &&
                 <>
-                    <div className='md:flex justify-between my-10 shadow md:mx-40 mx-10 py-5 md:px-10 px-5 text-center md:text-left'>
-                        <div className='flex flex-col'>
-                            <h2 className='text-2xl font-semibold text-yellow-500'>Hair Spa</h2>
-                            <h5>Date : <span className='font-semibold'>12-10-2025</span></h5>
-                            <h5>Time : <span className='font-semibold'>10:00 AM</span></h5>
-                            <p className='my-3'>Status: <span className='text-blue-600 font-semibold'>Pending</span></p>
-                        </div>
+                    {
+                        userAppointments.length > 0 ?
+                            userAppointments?.map(userAppoint => (
+                                <div key={userAppoint?._id} className='md:flex justify-between my-10 shadow md:mx-40 mx-10 py-5 md:px-10 px-5 text-center md:text-left'>
+                                    <div className='flex flex-col'>
+                                        <h2 className='text-2xl font-semibold text-yellow-500'>{userAppoint?.serviceName}</h2>
+                                        <h5>Date : <span className='font-semibold'>{userAppoint?.date}</span></h5>
+                                        <h5>Time : <span className='font-semibold'>{userAppoint?.time}</span></h5>
+                                        <p className='my-3'>Status: {
+                                            userAppoint?.status == "pending" ?
+                                                <span className='text-blue-600 font-semibold'>Pending</span>
+                                                :
+                                                userAppoint?.status == "approved" ?
+                                                    <span className='text-green-600 font-semibold'>Approved</span>
+                                                    :
+                                                    <span className='text-red-600 font-semibold'>Rejected</span>
+                                        }</p>
+                                    </div>
 
-                        <div className='flex md:flex-col items-center md:justify-center justify-between'>
-                            <button className='text-blue-500 cursor-pointer text-sm'>Change Date or Time</button>
-                            <button className='text-red-500 cursor-pointer md:mt-3 text-sm'>Delete Appointment</button>
-                        </div>
-                    </div>
+                                    <div className='flex  md:justify-center '>
 
-                    <div className='md:flex justify-between my-10 shadow md:mx-40 mx-10 py-5 md:px-10 px-5 text-center md:text-left'>
-                        <div className='flex flex-col'>
-                            <h2 className='text-2xl font-semibold text-yellow-500'>Botox Treatment</h2>
-                            <h5>Date : <span className='font-semibold'>22-10-2025</span></h5>
-                            <h5>Time : <span className='font-semibold'>1:00 PM</span></h5>
-                            <p className='my-3'>Status: <span className='text-green-700 font-semibold'>Approved</span></p>
-                        </div>
+                                        {
+                                            userAppoint?.status == "approved" || userAppoint?.status == "rejected" ?
+                                                <button onClick={() => handleDelete(userAppoint?._id)} className='text-red-500 cursor-pointer text-sm'>Delete Appointment</button>
+                                                :
+                                                <button onClick={() => handleDelete(userAppoint?._id)} className='text-red-500 cursor-pointer text-sm'>Cancel Appointment</button>
 
-                        <div className='flex md:flex-col items-center md:justify-center justify-between'>
-                            <button className='text-blue-500 cursor-pointer text-sm'>Change Date or Time</button>
-                            <button className='text-red-500 cursor-pointer md:mt-3 text-sm'>Delete Appointment</button>
-                        </div>
-                    </div>
+
+                                        }
+
+                                    </div>
+                                </div>
+                            ))
+                            :
+                            <p className='px-20 py-20 text-center'>No appointments.</p>
+                    }
+
+
                 </>
             }
 
             {
-                history &&
+                appliedJobs &&
                 <>
-                    <button className='my-5 md:ms-50 ms-10 text-red-500 text-lg'>Clear History</button>
-                    <div className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
+                    {/* <button className='my-5 md:ms-50 ms-10 text-red-500 text-lg'>Clear History</button> */}
+                   {
+                    allJobs.length>0?
+                    allJobs?.map(job=>(
+                         <div key={job?._id} className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
                         <div className='flex flex-col'>
                             <h2 className='text-2xl font-semibold text-yellow-500'>Hair Cut</h2>
                             <h5>Date : <span className='font-semibold'>04-5-2025</span></h5>
@@ -99,20 +243,12 @@ const Profile = () => {
                             <button className='text-red-500 cursor-pointer mt-3'>Delete</button>
                         </div>
                     </div>
+                    ))
+                    :
+                    <p>You have'nt applied any job!</p>
+                   }
 
-                    <div className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
-                        <div className='flex flex-col'>
-                            <h2 className='text-2xl font-semibold text-yellow-500'>Pedicure</h2>
-                            <h5>Date : <span className='font-semibold'>1-09-2025</span></h5>
-                            <h5>Time : <span className='font-semibold'>03:00 PM</span></h5>
-
-                        </div>
-
-                        <div className='flex flex-col items-center justify-center'>
-
-                            <button className='text-red-500 cursor-pointer mt-3'>Delete</button>
-                        </div>
-                    </div>
+                    
                 </>
             }
 
@@ -133,9 +269,14 @@ const Profile = () => {
 
                         <div className='flex justify-center my-5'>
                             <label htmlFor='profile-img'>
-                                <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={userDetails.profile} alt="" />
+                                {
+                                    existingProfilePic ?
+                                        <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={preview ? preview : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" />
+                                        :
+                                        <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={preview ? preview : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"} alt="" />
+                                }
                                 <FontAwesomeIcon className='absolute top-20 md:right-20 right-40 bg-yellow-500 p-2 rounded-full text-sm' icon={faPen} />
-                                <input type="file" className='hidden' id='profile-img' />
+                                <input onChange={(e) => handleUploadImage(e)} type="file" className='hidden' id='profile-img' />
                             </label>
                         </div>
 
@@ -146,16 +287,16 @@ const Profile = () => {
                                 <input value={userDetails.password} onChange={(e) => setUserDetails({ ...userDetails, password: e.target.value })} type={viewPasswordStatus ? "text" : "password"} className='w-full placeholder-gray-400 border border-gray-400 p-1' placeholder='Password' />
                                 <button onClick={() => setViewPasswordStatus(!viewPasswordStatus)}>
                                     {
-                                        viewPasswordStatus?<FontAwesomeIcon style={{ marginLeft: '-30px' }} icon={faEye} />
-                                        :
-                                        <FontAwesomeIcon style={{ marginLeft: '-30px' }} icon={faEyeSlash} />
+                                        viewPasswordStatus ? <FontAwesomeIcon style={{ marginLeft: '-30px' }} icon={faEye} />
+                                            :
+                                            <FontAwesomeIcon style={{ marginLeft: '-30px' }} icon={faEyeSlash} />
                                     }
                                 </button>
-                               
+
                             </div>
                             <div className='flex justify-between my-3'>
                                 <button className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
-                                <button className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>UPDATE</button>
+                                <button onClick={handleEditUser} className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>UPDATE</button>
 
                             </div>
                         </div>
@@ -165,6 +306,19 @@ const Profile = () => {
             }
 
             <Footer />
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+
+            />
         </>
     )
 }

@@ -72,6 +72,22 @@ export const rejectApplicationAPI = async (id,reqHeader)=>{
   return await commonAPI("PUT",`${SERVERURL}/reject/${id}/application`,{},reqHeader)
 }
 
+// --------- All Appointments-------------
+
+export const getAllAdminAppointmentsAPI = async (reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/all-appointments`,{},reqHeader)
+}
+
+// ------- Approve appointment -----------
+export const approveAppointmentAPI = async (id,reqHeader)=>{
+  return await commonAPI("PUT",`${SERVERURL}/approve/${id}/appointment`,{},reqHeader)
+}
+
+// ------- Reject appointment -----------
+export const rejectAppointmentAPI = async (id,reqHeader)=>{
+  return await commonAPI("PUT",`${SERVERURL}/reject/${id}/appointment`,{},reqHeader)
+}
+
 // ------------ USER --------------------
 // -------- Home page services -------------
 export const getHomeServicesAPI = async ()=>{
@@ -96,5 +112,29 @@ export const addJobApplicationAPI = async (reqBody,reqHeader)=>{
 // ---------- View Single service -------------
 export const viewSingleServiceAPI = async (id,reqHeader)=>{
   return await commonAPI("GET",`${SERVERURL}/view/${id}/service`,{},reqHeader)
+}
+
+// ---------- Book Appointment -------------
+export const bookAppointmentAPI = async (reqBody,reqHeader)=>{
+  return await commonAPI("POST",`${SERVERURL}/add-appointment`,reqBody,reqHeader)
+}
+
+// ---------- View user appointments -------------
+export const viewUserAppointmentAPI = async (reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/view/user/appointments`,{},reqHeader)
+}
+
+export const removeAppointmentAPI = async (id,reqHeader)=>{
+  return await commonAPI("DELETE",`${SERVERURL}/remove/${id}/appointment`,{},reqHeader)
+}
+
+// -------- Update Admin Details-----------
+export const editUserDetailsAPI = async (reqBody,reqHeader)=>{
+  return await commonAPI("PUT",`${SERVERURL}/edit/user`,reqBody,reqHeader)
+}
+
+// ---------- View user applied jobs -------------
+export const viewUserAppliedJobsAPI = async (reqHeader)=>{
+  return await commonAPI("GET",`${SERVERURL}/applied-jobs`,{},reqHeader)
 }
 

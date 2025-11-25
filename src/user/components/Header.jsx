@@ -1,8 +1,10 @@
 import { faFacebookF, faInstagram, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
+import SERVERURL from '../../services/ServerURL'
+import { UserUpdateContext } from '../../contextAPI/ShareContext'
 
 const Header = ({ navblack }) => {
 
@@ -10,6 +12,8 @@ const Header = ({ navblack }) => {
   const [token, setToken] = useState("")
   const [userMenu, setUserMenu] = useState("")
   const [user,setUser] = useState({})
+  const [userDp,setUserDp] = useState("")
+  const {userEditResponse} = useContext(UserUpdateContext)
   const navigate = useNavigate()
 
 
@@ -20,8 +24,9 @@ const Header = ({ navblack }) => {
 
       setToken(userToken)
       setUser(userDetails)
+      setUserDp(userDetails.profile)
     }
-  }, [token])
+  }, [token,userEditResponse])
 
   // console.log(token)
 
@@ -70,7 +75,7 @@ const Header = ({ navblack }) => {
               <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li></Link>
               :
               <div className='relative flex items-center justify-center'>
-                <button className='cursor-pointer' onClick={() => setUserMenu(!userMenu)}><img src={user.profile==""?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":user.profile} style={{ width: '40px', height: '40px', borderRadius: '50%' }} alt="user" /></button>
+                <button className='cursor-pointer' onClick={() => setUserMenu(!userMenu)}><img src={userDp==""?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":`${SERVERURL}/uploads/${userDp}`} style={{ width: '40px', height: '40px', borderRadius: '50%' }} alt="user" /></button>
 
                 {
                   userMenu &&
