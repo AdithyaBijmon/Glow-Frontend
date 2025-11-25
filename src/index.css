@@ -1,5 +1,93 @@
 @import "tailwindcss";
 
-*{
+* {
     font-family: "Outfit", sans-serif;
 }
+
+/* body {
+  scrollbar-color: #000077 #ecc94b; 
+  scrollbar-width: thin; 
+} */
+
+::-webkit-scrollbar {
+  width: 12px; /* width of the vertical scrollbar */
+  background-color: #ffff; /* color of the entire scrollbar area */
+}
+
+::-webkit-scrollbar-track {
+  background: #ffff;
+  border-radius: 10px; /* Optional: roundness of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ecc94b;
+  border-radius: 10px; /* Optional: roundness of the thumb */
+}
+
+
+#welcome-glow {
+    animation: slide-right 2s forwards;
+}
+
+#beauty{
+    animation: slide-left 2s forwards;
+}
+
+#modern{
+    animation: slide-left2 2s forwards;
+}
+
+
+.group:hover .underline-effect {
+  /* Set the width to 100% on hover, creating the slide effect */
+  width: 100%;
+}
+
+@keyframes slide-right {
+    from {
+        visibility: none;
+        opacity: 0;
+        transform: translateX(-200px);
+
+    }
+
+    to {
+        visibility: visible;
+        opacity: 1;
+       
+
+    }
+}
+
+@keyframes slide-left {
+    from {
+        visibility: none;
+        opacity: 0;
+       
+    }
+
+    to {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-50px);
+       
+
+    }
+}
+
+@keyframes slide-left2 {
+    from {
+        visibility: none;
+        opacity: 0;
+       
+    }
+
+    to {
+        visibility: visible;
+        opacity: 1;
+        transform: translateX(-70px);
+       
+
+    }
+}
+

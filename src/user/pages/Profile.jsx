@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faMultiply, faPen } from '@fortawesome/free-solid-svg-icons'
 import Footer from '../../components/Footer'
-import { editUserDetailsAPI, removeAppointmentAPI, viewUserAppliedJobsAPI, viewUserAppointmentAPI } from '../../services/allAPI'
+import { editUserDetailsAPI, removeApplicationAPI, removeAppointmentAPI, viewUserAppliedJobsAPI, viewUserAppointmentAPI } from '../../services/allAPI'
 import SERVERURL from '../../services/ServerURL'
 import { ToastContainer, toast } from 'react-toastify'
 import { UserUpdateContext } from '../../contextAPI/ShareContext'
@@ -19,9 +19,9 @@ const Profile = () => {
     const [userAppointments, setUserAppointments] = useState([])
     const [preview, setPreview] = useState("")
     const { userEditResponse, setUserEditResponse } = useContext(UserUpdateContext)
-    const [allJobs,setAllJobs] = useState([])
+    const [allJobs, setAllJobs] = useState([])
     // console.log(userAppointments);
-
+    console.log(allJobs);
 
 
     useEffect(() => {
@@ -30,14 +30,18 @@ const Profile = () => {
             const user = JSON.parse(sessionStorage.getItem("user"))
             setUserDetails({ username: user.username, email: user.email, password: user.password, profile: "" })
             setExistingProfilePic(user.profile)
-            if (appoint) {
-                getUserAppointments()
-            }
-            if(appliedJobs){
+
+            getUserAppointments()
+
+            if (appliedJobs) {
                 getUserAppliedJobs()
+
+
             }
         }
-    }, [])
+    }, [appliedJobs])
+
+
 
     const getUserAppointments = async () => {
         const token = JSON.parse(sessionStorage.getItem("token"))
@@ -66,13 +70,13 @@ const Profile = () => {
 
         try {
             const result = await viewUserAppliedJobsAPI(reqHeader)
-            if(result.status==200){
+            if (result.status == 200) {
                 setAllJobs(result.data)
             }
-            
+
         } catch (error) {
             console.log(error);
-            
+
         }
     }
 
@@ -83,7 +87,7 @@ const Profile = () => {
     }
 
 
-    const handleDelete = async (id) => {
+    const handleDeleteAppointment = async (id) => {
         const isConfirmed = window.confirm("Are you sure you want to cancel the appointment?")
         if (isConfirmed) {
             const token = JSON.parse(sessionStorage.getItem("token"))
@@ -95,6 +99,28 @@ const Profile = () => {
                 const result = await removeAppointmentAPI(id, reqHeader)
                 if (result.status == 200) {
                     getUserAppointments()
+                }
+
+            } catch (error) {
+                console.log(error);
+
+            }
+        }
+
+    }
+
+    const handleDeleteApplication = async (id) => {
+        const isConfirmed = window.confirm("Are you sure you want to cancel the appointment?")
+        if (isConfirmed) {
+            const token = JSON.parse(sessionStorage.getItem("token"))
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+
+            try {
+                const result = await removeApplicationAPI(id, reqHeader)
+                if (result.status == 200) {
+                    getUserAppliedJobs()
                 }
 
             } catch (error) {
@@ -150,12 +176,16 @@ const Profile = () => {
             <div className='md:mx-20 mx-10 md:flex justify-between my-20 px-20  items-center bg-yellow-500/50 p-5'>
                 {/* <img  src={userDetails.profile == "" ? "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" /> */}
 
-                {
+                {/* {
                     existingProfilePic ?
                         <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={preview ? preview : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" />
                         :
                         <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={preview ? preview : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"} alt="" />
-                }
+                } */}
+
+
+                <img style={{ width: '150px', height: '150px' }} className='rounded-full object-cover' src={!existingProfilePic ? "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" : existingProfilePic.startsWith('https://lh3.googleusercontent.com/') ? existingProfilePic : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" />
+
 
                 <div className='flex flex-col justify-center'>
                     <h1 className='md:text-3xl text-2xl font-bold '>{userDetails.username}</h1>
@@ -205,9 +235,9 @@ const Profile = () => {
 
                                         {
                                             userAppoint?.status == "approved" || userAppoint?.status == "rejected" ?
-                                                <button onClick={() => handleDelete(userAppoint?._id)} className='text-red-500 cursor-pointer text-sm'>Delete Appointment</button>
+                                                <button onClick={() => handleDeleteAppointment(userAppoint?._id)} className='text-red-500 cursor-pointer text-sm'>Delete Appointment</button>
                                                 :
-                                                <button onClick={() => handleDelete(userAppoint?._id)} className='text-red-500 cursor-pointer text-sm'>Cancel Appointment</button>
+                                                <button onClick={() => handleDeleteAppointment(userAppoint?._id)} className='text-red-500 cursor-pointer text-sm'>Cancel Appointment</button>
 
 
                                         }
@@ -227,28 +257,54 @@ const Profile = () => {
                 appliedJobs &&
                 <>
                     {/* <button className='my-5 md:ms-50 ms-10 text-red-500 text-lg'>Clear History</button> */}
-                   {
-                    allJobs.length>0?
-                    allJobs?.map(job=>(
-                         <div key={job?._id} className='flex justify-between  my-10 shadow md:mx-40 mx-10 py-5 px-10'>
-                        <div className='flex flex-col'>
-                            <h2 className='text-2xl font-semibold text-yellow-500'>Hair Cut</h2>
-                            <h5>Date : <span className='font-semibold'>04-5-2025</span></h5>
-                            <h5>Time : <span className='font-semibold'>09:00 AM</span></h5>
+                    {
+                        allJobs.length > 0 ?
+                            allJobs?.map(job => (
+                                <div key={job?._id} className='flex justify-between my-10 shadow md:mx-60 mx-10 py-5 px-10'>
+                                    <div className='flex flex-col'>
+                                        <h2 className='text-2xl font-semibold text-yellow-500'>{job?.jobTitle}</h2>
+                                        <h5>Full Name : <span className='font-semibold'>{job?.fullName}</span></h5>
+                                        <h5>Email : <span className='font-semibold'>{job?.email}</span></h5>
+                                        <p className='font-bold'>Status :
+                                            {
 
-                        </div>
+                                                job?.status == "pending" ?
+                                                    <span className='text-blue-500 ms-2'>Pending</span>
+                                                    :
+                                                    job?.status == "approved" ?
+                                                        <span className='text-green-500 ms-2'>Approved</span>
+                                                        :
+                                                        <span className='text-red-500 ms-2'>Rejected</span>
 
-                        <div className='flex flex-col items-center justify-center'>
+                                            }
+                                        </p>
 
-                            <button className='text-red-500 cursor-pointer mt-3'>Delete</button>
-                        </div>
-                    </div>
-                    ))
-                    :
-                    <p>You have'nt applied any job!</p>
-                   }
+                                    </div>
 
-                    
+                                    <div className='flex flex-col items-center justify-center'>
+
+                                        {
+                                            job?.status == "pending" ?
+                                                <button onClick={() => handleDeleteApplication(job?._id)} className='text-red-500 cursor-pointer mt-3'>Cancel Application</button>
+                                                :
+                                                job?.status == "approved" ?
+                                                    ""
+                                                    :
+                                                    <button onClick={() => handleDeleteApplication(job?._id)} className='text-red-500 cursor-pointer mt-3'>Delete Application</button>
+
+                                        }
+
+
+                                    </div>
+
+
+                                </div>
+                            ))
+                            :
+                            <p className='text-center my-10 text-red-600'>You have'nt applied any job!</p>
+                    }
+
+
                 </>
             }
 
@@ -269,12 +325,10 @@ const Profile = () => {
 
                         <div className='flex justify-center my-5'>
                             <label htmlFor='profile-img'>
-                                {
-                                    existingProfilePic ?
-                                        <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={preview ? preview : `${SERVERURL}/uploads/${existingProfilePic}`} alt="" />
-                                        :
-                                        <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={preview ? preview : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"} alt="" />
-                                }
+
+                                <img className='relative' style={{ width: '120px', height: '120px', borderRadius: '50%' }} src={!existingProfilePic ?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":existingProfilePic.startsWith('https://lh3.googleusercontent.com/')?existingProfilePic :`${SERVERURL}/uploads/${existingProfilePic}`} alt="" />
+
+
                                 <FontAwesomeIcon className='absolute top-20 md:right-20 right-40 bg-yellow-500 p-2 rounded-full text-sm' icon={faPen} />
                                 <input onChange={(e) => handleUploadImage(e)} type="file" className='hidden' id='profile-img' />
                             </label>
@@ -295,7 +349,7 @@ const Profile = () => {
 
                             </div>
                             <div className='flex justify-between my-3'>
-                                <button className='text-white bg-orange-500 px-2 py-1 hover:bg-orange-400 cursor-pointer mt-3 '>RESET</button>
+                                <button></button>
                                 <button onClick={handleEditUser} className='text-white bg-green-500 px-2 py-1 hover:bg-green-400 cursor-pointer mt-3'>UPDATE</button>
 
                             </div>

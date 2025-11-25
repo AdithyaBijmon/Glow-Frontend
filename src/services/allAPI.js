@@ -138,3 +138,7 @@ export const viewUserAppliedJobsAPI = async (reqHeader)=>{
   return await commonAPI("GET",`${SERVERURL}/applied-jobs`,{},reqHeader)
 }
 
+export const removeApplicationAPI = async (id,reqHeader)=>{
+  return await commonAPI("DELETE",`${SERVERURL}/remove/${id}/application`,{},reqHeader)
+}
+

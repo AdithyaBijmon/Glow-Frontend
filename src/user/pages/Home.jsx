@@ -17,7 +17,7 @@ const Home = () => {
     const [testimonialPag3, setTestimonialPag3] = useState(false)
     const [token, setToken] = useState("")
     const [homeServices, setHomeServices] = useState([])
-    console.log(homeServices)
+    // console.log(homeServices)
 
 
     useEffect(() => {
@@ -69,9 +69,9 @@ const Home = () => {
 
                     {/* Hero section headings */}
 
-                    <h3 className='text-yellow-500 md:text-2xl text-xl md:mt-50 mt-35 md:mx-30 mx-5'>WELCOME  TO  GLOW</h3>
-                    <h2 className='md:text-6xl text-4xl font-bold md:mx-30 mx-5 md:mt-10 mt-5'>Timeless Beauty.</h2>
-                    <h1 className='md:text-8xl text-5xl font-bold md:mx-45 mx-15'>Modern style.</h1>
+                    <h3 className='text-yellow-500 md:text-2xl text-xl md:mt-50 mt-35 md:mx-30 mx-5' id='welcome-glow'>WELCOME  TO  GLOW</h3>
+                    <h2 className='md:text-6xl text-4xl font-bold md:mx-30 mx-5 md:mt-10 mt-5' id='beauty'>Timeless Beauty.</h2>
+                    <h1 className='md:text-8xl text-5xl font-bold md:mx-45 mx-15' id='modern'>Modern style.</h1>
                     <div className='md:block flex justify-center mt-10 '><button className='md:px-30 px-10 py-4 bg-yellow-500 text-black font-bold md:mx-46 mx-10 hover:bg-yellow-400'>Book an Appointment</button></div>
 
                 </div>

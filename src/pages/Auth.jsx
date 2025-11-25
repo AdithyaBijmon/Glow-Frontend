@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
 import { googleLoginAPI, loginAPI, registerAPI } from '../services/allAPI';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
+import { userAuthContext } from '../contextAPI/AuthenticationContext';
 
 const Auth = ({ register }) => {
 
   const [userDetails, setUserDetails] = useState({ username: "", email: "", password: "" })
   const navigate = useNavigate()
-  console.log(userDetails)
+  const {role,authorisedUser,setAuthorisedUser} = useContext(userAuthContext)
+  // console.log(userDetails)
 
   const handleRegister = async () => {
     const { username, email, password } = userDetails
@@ -100,6 +102,7 @@ const Auth = ({ register }) => {
         toast.success("Login successful")
         sessionStorage.setItem("user", JSON.stringify(result.data.user))
         sessionStorage.setItem("token", JSON.stringify(result.data.token))
+        setAuthorisedUser(true)
 
         setTimeout(() => {
           if (result.data.user.role == 'user') {

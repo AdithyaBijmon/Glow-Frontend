@@ -14,33 +14,50 @@ import AdminCareers from './admin/pages/AdminCareers'
 import AdminServies from './admin/pages/AdminServies'
 import Careers from './user/pages/Careers'
 import ViewService from './user/pages/ViewService'
+import { useContext } from 'react'
+import { userAuthContext } from './contextAPI/AuthenticationContext'
 
 
 function App() {
+  const { role, authorisedUser, setAuthorisedUser } = useContext(userAuthContext)
 
   return (
     <>
       <Routes>
         {/* user */}
-        <Route path='/' element={<Home/>}/>
-        <Route path='/about' element={<About/>}/>
-        <Route path='/services' element={<Services/>}/>
-        <Route path='/contact' element={<Contact/>}/>
-        <Route path='/login' element={<Auth/>}/>
-        <Route path='/register' element={<Auth register/>}/>
-        <Route path='/profile' element={<Profile/>}/>
-        <Route path='/careers' element={<Careers/>}/>
-        <Route path='/view/:id/service' element={<ViewService/>}/>
-        <Route path='/*' element={<Pnf/>}/>
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/services' element={<Services />} />
+        <Route path='/login' element={<Auth />} />
+        <Route path='/register' element={<Auth register />} />
+        <Route path='/contact' element={<Contact />} />
+
+
+        {
+          role == "user" &&
+          <>
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/careers' element={<Careers />} />
+            <Route path='/view/:id/service' element={<ViewService />} />
+          </>
+        }
+
+
+
 
         {/* admin */}
-        <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
-        <Route path='/admin-appointments' element={<Appointments/>}/>
-        <Route path='/admin-services' element={<AdminServies/>}/>
-        <Route path='/admin-settings' element={<AdminSettings/>}/>
-        <Route path='/admin-careers' element={<AdminCareers/>}/>
+        {
+          role == "admin" &&
+          <>
+            <Route path='/admin-dashboard' element={<AdminDashboard />} />
+            <Route path='/admin-appointments' element={<Appointments />} />
+            <Route path='/admin-services' element={<AdminServies />} />
+            <Route path='/admin-settings' element={<AdminSettings />} />
+            <Route path='/admin-careers' element={<AdminCareers />} />
+          </>
+        }
 
-
+        <Route path='/*' element={<Pnf />} />
       </Routes>
     </>
   )

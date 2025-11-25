@@ -11,9 +11,9 @@ const Header = ({ navblack }) => {
   const [menu, setMenu] = useState(false)
   const [token, setToken] = useState("")
   const [userMenu, setUserMenu] = useState("")
-  const [user,setUser] = useState({})
-  const [userDp,setUserDp] = useState("")
-  const {userEditResponse} = useContext(UserUpdateContext)
+  const [user, setUser] = useState({})
+  const [userDp, setUserDp] = useState("")
+  const { userEditResponse } = useContext(UserUpdateContext)
   const navigate = useNavigate()
 
 
@@ -26,7 +26,7 @@ const Header = ({ navblack }) => {
       setUser(userDetails)
       setUserDp(userDetails.profile)
     }
-  }, [token,userEditResponse])
+  }, [token, userEditResponse])
 
   // console.log(token)
 
@@ -65,30 +65,70 @@ const Header = ({ navblack }) => {
           {/*small devices menu bar */}
           <FontAwesomeIcon onClick={() => setMenu(!menu)} icon={faBars} className='text-3xl md:!hidden text-white' />
         </div>
-        <ul className={menu ? 'md:flex items-center md:mt-0 mt-3 md:text-base text-xl text-center' : 'md:flex hidden items-center  cursor-pointer'}>
-          <Link to={'/'}> <li className='text-gray-200 hover:text-white'>Home</li></Link>
-          <Link to={'/about'}><li className='md:mx-10 md:my-0 my-2 text-gray-200 hover:text-white'>About</li></Link>
-          <Link to={'/services'}><li className='text-gray-200 hover:text-white'>Services</li></Link>
-          <Link to={'/contact'}><li className='md:mx-10 md:my-0 my-2 text-gray-200 hover:text-white'>Contact</li></Link>
+        <ul className={menu ? 'md:flex items-center md:mt-0 mt-3 md:text-base text-xl text-center' : 'md:flex hidden items-center  cursor-pointer'}>
+
+          {/* Home Link */}
+          <li className='md:mx-0 md:my-0 my-2 relative group'>
+            <Link to={'/'} className='text-gray-200 hover:text-white p-1 block'>
+              Home
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-yellow-500 
+                           origin-left transform scale-x-0 transition-transform duration-300 
+                           group-hover:scale-x-100">
+              </span>
+            </Link>
+          </li>
+
+          {/* About Link */}
+          <li className='md:mx-10 md:my-0 my-2 relative group'>
+            <Link to={'/about'} className='text-gray-200 hover:text-white p-1 block'>
+              About
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-yellow-500 
+                           origin-left transform scale-x-0 transition-transform duration-300 
+                           group-hover:scale-x-100">
+              </span>
+            </Link>
+          </li>
+
+          {/* Services Link */}
+          <li className='md:mx-0 md:my-0 my-2 relative group'>
+            <Link to={'/services'} className='text-gray-200 hover:text-white p-1 block'>
+              Services
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-yellow-500 
+                           origin-left transform scale-x-0 transition-transform duration-300 
+                           group-hover:scale-x-100">
+              </span>
+            </Link>
+          </li>
+
+          {/* Contact Link */}
+          <li className='md:mx-10 md:my-0 my-2 relative group'>
+            <Link to={'/contact'} className='text-gray-200 hover:text-white p-1 block'>
+              Contact
+              <span className="absolute left-0 bottom-0 h-[2px] w-full bg-yellow-500 
+                           origin-left transform scale-x-0 transition-transform duration-300 
+                           group-hover:scale-x-100">
+              </span>
+            </Link>
+          </li>
+
+          {/* Login/User Menu - No sliding effect applied here */}
           {
             !token ?
               <Link to={'/login'}><li><button className='px-5 py-2 bg-yellow-500 text-black font-bold cursor-pointer'>Login</button></li></Link>
               :
-              <div className='relative flex items-center justify-center'>
-                <button className='cursor-pointer' onClick={() => setUserMenu(!userMenu)}><img src={userDp==""?"https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png":`${SERVERURL}/uploads/${userDp}`} style={{ width: '40px', height: '40px', borderRadius: '50%' }} alt="user" /></button>
+              <div className='relative flex items-center justify-center md:ml-10 md:my-0 my-2'>
+                <button className='cursor-pointer' onClick={() => setUserMenu(!userMenu)}><img src={userDp == "" ? "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" : userDp.startsWith('https://lh3.googleusercontent.com/') ? userDp : `${SERVERURL}/uploads/${userDp}`} style={{ width: '40px', height: '40px', borderRadius: '50%' }} alt="user" /></button>
 
                 {
                   userMenu &&
-                  <div className='absolute px-4 py-1 bg-white text-black/80 md:top-9 md:left-5 left-40 flex flex-col text-md'>
+                  <div className='absolute px-4 py-1 bg-white text-black/80 md:top-9 md:left-5 left-40 flex flex-col text-md z-10'> {/* Added z-10 */}
                     <Link to={'/profile'} >Profile</Link>
                     <button onClick={logout}><Link className='my-3'>Logout</Link></button>
-
                   </div>
                 }
               </div>
           }
         </ul>
-
       </div>
     </>
   )
